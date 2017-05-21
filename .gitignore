@@ -3,3 +3,6 @@
 *.py[co]
 pip-log.txt
 __pycache__
+build
+dist
+*.egg-info
