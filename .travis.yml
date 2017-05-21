@@ -9,6 +9,11 @@ python:
   - pypy3
 cache: pip
 
+matrix:
+  allow_failures:
+    - 3.7-dev
+    - pypy3
+
 install:
   - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then travis_retry pip install mock; fi
   - travis_retry pip install -U pip setuptools wheel twine flake8
