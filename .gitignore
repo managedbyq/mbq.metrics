@@ -1,0 +1,5 @@
+.DS_Store
+.python-version
+*.py[co]
+pip-log.txt
+__pycache__
