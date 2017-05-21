@@ -1,6 +1,8 @@
-from unittest import mock, TestCase
+from unittest import TestCase
 
 from mbq import metrics
+
+from tests.compat import mock
 
 
 class CollectorTests(TestCase):
