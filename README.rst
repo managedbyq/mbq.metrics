@@ -1,7 +1,16 @@
 mbq.metrics: metrics for the masses
 ===================================
 
-.. image:: https://travis-ci.org/managedbyq/mbq.metrics.svg?branch=master
+.. .. image:: https://img.shields.io/pypi/v/mbq.metrics.svg
+..     :target: https://pypi.python.org/pypi/mbq.metrics
+
+.. .. image:: https://img.shields.io/pypi/l/mbq.metrics.svg
+..     :target: https://pypi.python.org/pypi/mbq.metrics
+
+.. .. image:: https://img.shields.io/pypi/pyversions/mbq.metrics.svg
+..     :target: https://pypi.python.org/pypi/mbq.metrics
+
+.. image:: https://img.shields.io/travis/managedbyq/mbq.metrics/master.svg
     :target: https://travis-ci.org/managedbyq/mbq.metrics
 
 Installation
