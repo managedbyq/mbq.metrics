@@ -11,8 +11,8 @@ cache: pip
 
 matrix:
   allow_failures:
-    - 3.7-dev
-    - pypy3
+    - python: 3.7-dev
+    - python: pypy3
 
 install:
   - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then travis_retry pip install mock; fi
