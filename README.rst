@@ -1,6 +1,9 @@
 mbq.metrics: metrics for the masses
 ===================================
 
+.. image:: https://travis-ci.org/managedbyq/mbq.metrics.svg?branch=master
+    :target: https://travis-ci.org/managedbyq/mbq.metrics
+
 Installation
 ------------
 
