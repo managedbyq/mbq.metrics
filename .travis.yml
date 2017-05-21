@@ -34,4 +34,5 @@ notifications:
 #   on:
 #     tags: true
 #     distributions: sdist bdist_wheel
+#     python: '3.6'
 #     repo: managedbyq/mbq.metrics
