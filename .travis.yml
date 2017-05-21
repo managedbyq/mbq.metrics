@@ -8,4 +8,8 @@ python:
   - "pypy"
   - "pypy3"
 
-script: python -m unittest discover tests
+install:
+  - pip install .
+
+script:
+  - python -m unittest discover tests
