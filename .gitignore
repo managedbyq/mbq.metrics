@@ -1,8 +1,8 @@
+*.egg-info
+*.py[co]
 .DS_Store
 .python-version
-*.py[co]
-pip-log.txt
 __pycache__
 build
 dist
-*.egg-info
+pip-log.txt
