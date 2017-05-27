@@ -21,7 +21,7 @@ install:
 
 script:
   - flake8
-  - python -m unittest discover tests
+  - python -Wall -m unittest discover tests
 
 notifications:
   email: false
