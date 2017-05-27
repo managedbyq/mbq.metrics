@@ -16,7 +16,7 @@ matrix:
 
 install:
   - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then travis_retry pip install mock; fi
-  - travis_retry pip install -U pip setuptools wheel twine flake8
+  - travis_retry pip install --upgrade pip setuptools wheel twine flake8
   - pip install .
 
 script:
