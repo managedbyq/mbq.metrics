@@ -1,14 +1,14 @@
 mbq.metrics: metrics for the masses
 ===================================
 
-.. .. image:: https://img.shields.io/pypi/v/mbq.metrics.svg
-..     :target: https://pypi.python.org/pypi/mbq.metrics
+.. image:: https://img.shields.io/pypi/v/mbq.metrics.svg
+    :target: https://pypi.python.org/pypi/mbq.metrics
 
-.. .. image:: https://img.shields.io/pypi/l/mbq.metrics.svg
-..     :target: https://pypi.python.org/pypi/mbq.metrics
+.. image:: https://img.shields.io/pypi/l/mbq.metrics.svg
+    :target: https://pypi.python.org/pypi/mbq.metrics
 
-.. .. image:: https://img.shields.io/pypi/pyversions/mbq.metrics.svg
-..     :target: https://pypi.python.org/pypi/mbq.metrics
+.. image:: https://img.shields.io/pypi/pyversions/mbq.metrics.svg
+    :target: https://pypi.python.org/pypi/mbq.metrics
 
 .. image:: https://img.shields.io/travis/managedbyq/mbq.metrics/master.svg
     :target: https://travis-ci.org/managedbyq/mbq.metrics
@@ -33,7 +33,7 @@ Getting started
 
     metrics.init(namespace='my-service', constant_tags={'env': ENV_NAME})
 
-    metrics.increment('metric.name', 5, tags={'something': 'awesome')
+    metrics.increment('metric.name', 5, tags={'something': 'awesome'})
 
     # show the rest
 
