@@ -58,7 +58,6 @@ class Collector(object):
 
     @property
     def statsd(self):
-        print('sssss')
         return self._statsd or _statsd
 
     def _combine_metric(self, metric):

@@ -7,11 +7,15 @@ from mbq.metrics import utils
 
 from tests.compat import mock
 
+
 class GlobalTests(unittest.TestCase):
+
+    def setUp(self):
+        metrics._initialized = False
+        metrics._statsd = utils.NullStatsd()
 
     @mock.patch('datadog.DogStatsd')
     def test_init(self, DogStatsd):
-        reload(metrics)
         metrics.init()
         self.assertTrue(DogStatsd.called)
         self.assertTrue(metrics._initialized)
@@ -19,12 +23,10 @@ class GlobalTests(unittest.TestCase):
 
     @mock.patch('datadog.DogStatsd')
     def test_default_collector(self, DogStatsd):
-        reload(metrics)
         metrics.init()
         self.assertNotIsInstance(metrics._default_collector.statsd, utils.NullStatsd)
 
     def test_global_functions_exist(self):
-        reload(metrics)
         methods = [
             'event',
             'gauge',
@@ -35,6 +37,3 @@ class GlobalTests(unittest.TestCase):
         ]
         for method in methods:
             self.assertTrue(callable(getattr(metrics, method)))
-
-if __name__ == '__main__':
-    unittest.main()
