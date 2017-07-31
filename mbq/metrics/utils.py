@@ -11,4 +11,5 @@ class MetricsError(Exception):
 
 class NullStatsd:
     def __getattr__(self, attr):
+        print(attr) # TODO
         raise MetricsError('statsd has not been properly initialized')
