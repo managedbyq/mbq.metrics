@@ -37,7 +37,7 @@ class Collector(object):
     def __init__(self, prefix=None, tags=None, statsd=None):
         self.prefix = prefix
         self.tags = tags or {}
-        self.statsd = statsd or _statsd
+        self._statsd = statsd
 
     def __call__(self, func):
         @functools.wraps(func)
@@ -55,6 +55,10 @@ class Collector(object):
 
     def __exit__(self, type, value, traceback):
         pass
+
+    @property
+    def statsd(self):
+        return self._statsd or _statsd
 
     def _combine_metric(self, metric):
         if not self.prefix:
