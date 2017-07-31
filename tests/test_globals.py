@@ -1,4 +1,3 @@
-from imp import reload
 import unittest
 
 from mbq import metrics
