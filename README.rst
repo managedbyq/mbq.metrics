@@ -40,7 +40,7 @@ Getting started
 FAQs
 ----
 
-**Where do I configure the DogStatsd agent configuration?**
+**Where do I put the DogStatsd agent configuration?**
 
 You don't! ``mbq.metrics`` is pre-baked with assumptions about how Q runs it's services. Specifically, we assume that each service runs in a Docker container and that that container is running on a VM that's running the DogStatsD agent. In that way we can automatically configure our client to reach outside of the container and easily push metrics to the agent. 
 Read more in the `datadogpy documentation <http://datadogpy.readthedocs.io/en/latest/index.html#datadog.initialize>`_ or `in the source <https://github.com/DataDog/datadogpy/blob/fd6646a6e8cde1d7a8c2f6e324d04e8d7f8a6f8c/datadog/dogstatsd/route.py#L15>`_.
