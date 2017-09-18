@@ -1,9 +1,8 @@
-import time
+from time import time
 
 from django.conf import settings
 try:
-    import django.utils.deprecation.MiddlewareMixin as MiddlewareMixin
-    MiddlewareDeprecationMixin = MiddlewareMixin
+    from django.utils.deprecation import MiddlewareMixin as MiddlewareDeprecationMixin
 except ImportError:
     MiddlewareDeprecationMixin = object
 
@@ -25,26 +24,23 @@ class TimingMiddleware(MiddlewareDeprecationMixin):
         self.get_response = get_response
 
     def process_request(self, request):
-
         if request.path in SETTINGS['EXCLUDED_PATHS']:
             return request
-
-        setattr(request, 'mbq-metrics-start-time', time.time())
-        return request
+        setattr(request, 'mbq-metrics-start-time', time())
 
     def process_response(self, request, response):
 
         if not hasattr(request, 'mbq-metrics-start-time'):
             return response
 
-        duration = time.time() - getattr(request, 'mbq-metrics-start-time')
+        duration = time() - getattr(request, 'mbq-metrics-start-time')
         duration_ms = int(round(duration * 1000))
 
         metrics.timing(
             'response-time',
             duration_ms,
             tags={
-                '{}-endpoint': request.path,
+                'endpoint': request.path,
                 'http-request-method': request.method,
                 'http-response-status': response.status_code,
                 'http-response-length': len(response.content)

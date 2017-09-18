@@ -7,3 +7,5 @@ build
 dist
 pip-log.txt
 .idea
+.tox
+
