@@ -31,7 +31,7 @@ class TimingMiddlewareTest(TestCase):
             'response-time',
             1000,
             tags={
-                'endpoint': 'test/path',
+                'http-request-path': 'test/path',
                 'http-request-method': 'POST',
                 'http-response-status': 200,
                 'http-response-length': 4,
@@ -66,7 +66,7 @@ class TimingMiddlewareTest(TestCase):
             'response-time',
             1000,
             tags={
-                'endpoint': 'test/path',
+                'http-request-path': 'test/path',
                 'http-request-method': 'POST',
                 'http-response-status': 200,
                 'http-response-length': 4,

@@ -30,9 +30,8 @@ matrix:
 
 install:
   - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then travis_retry pip install mock; fi
-  - travis_retry pip install --upgrade pip setuptools wheel twine flake8
+  - travis_retry pip install --upgrade pip setuptools wheel twine flake8 tox
   - pip install .
-  - pip install tox
   - if [[ ! $TOXENV ]]; then pip install -r test-requirements.txt || travis_terminate 1; fi
 
 script:

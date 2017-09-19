@@ -46,7 +46,7 @@ We now use `tox` for local testing across multiple python environments. Before t
 install and run tox:
 
 .. code-block:: bash
-    $ pip install tox`
+    $ pip install tox
     $ tox
     $
     $ # run a specific environment
