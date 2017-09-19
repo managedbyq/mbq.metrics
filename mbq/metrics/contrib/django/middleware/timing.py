@@ -14,7 +14,7 @@ SETTINGS = {
 SETTINGS.update(
     getattr(settings, 'MBQ_METRICS', {})
 )
-SETTINGS['EXCLUDED_PATHS'] = set(map(lambda x: x.strip('/'), SETTINGS['EXCLUDED_PATHS']))
+SETTINGS['EXCLUDED_PATHS'] = {path.strip('/') for path in SETTINGS['EXCLUDED_PATHS']}
 
 
 class TimingMiddleware(MiddlewareDeprecationMixin):
