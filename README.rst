@@ -36,7 +36,23 @@ Getting started
     metrics.increment('metric.name', 5, tags={'something': 'awesome'})
 
     # show the rest
-    
+
+
+Testing
+-------
+
+We now use `tox` for local testing across multiple python environments. Before this use `pyenv` to install the following python interpreters: cpython{2.7, 3.5, 3.6} and pypy3
+
+install and run tox:
+
+.. code-block:: bash
+    $ pip install tox
+    $ tox
+    $
+    $ # run a specific environment
+    $ tox -e py36-django111
+    $
+
 FAQs
 ----
 

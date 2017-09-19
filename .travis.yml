@@ -1,27 +1,43 @@
 sudo: false
 language: python
 python:
-  - '2.7'
-  - '3.5'
-  - '3.6'
   - 3.7-dev
-  - pypy
   - pypy3
 cache: pip
 
 matrix:
+  include:
+    - python: 2.7
+      env: TOXENV=py27-django19
+    - python: 2.7
+      env: TOXENV=py27-django110
+    - python: 3.5
+      env: TOXENV=py35-django19
+    - python: 3.5
+      env: TOXENV=py35-django110
+    - python: 3.6
+      env: TOXENV=py36-django19
+    - python: 3.6
+      env: TOXENV=py36-django110
+    - python: 3.6
+      env: TOXENV=py36-django111
+    - python: pypy
+      env: TOXENV=pypy-django111
+
   allow_failures:
     - python: 3.7-dev
     - python: pypy3
 
 install:
   - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then travis_retry pip install mock; fi
-  - travis_retry pip install --upgrade pip setuptools wheel twine flake8
+  - travis_retry pip install --upgrade pip setuptools wheel twine flake8 tox
   - pip install .
+  - if [[ ! $TOXENV ]]; then pip install -r test-requirements.txt || travis_terminate 1; fi
 
 script:
   - flake8
-  - python -Wall -m unittest discover tests
+  - if [[ $TOXENV ]]; then tox -e $TOXENV || travis_terminate 1; fi
+  - if [[ ! $TOXENV ]]; then python -Wall -m unittest discover tests || travis_terminate 1; fi
 
 notifications:
   email: false
