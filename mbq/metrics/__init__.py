@@ -75,8 +75,13 @@ class Collector(object):
         return tags + utils.tag_dict_to_list(self.tags)
 
     def event(self, title, text, alert_type=None, tags=None):
+        event_title = self._combine_metric(title)
+
+        if self.statsd.namespace:
+            event_title = self.statsd.namespace + '.' + event_title
+
         self.statsd.event(
-            title,
+            event_title,
             text,
             alert_type=alert_type,
             tags=self._combine_tags(tags),
