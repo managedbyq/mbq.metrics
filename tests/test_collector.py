@@ -42,3 +42,18 @@ class CollectorTests(TestCase):
             tags=['t:2', 't:1', 'constant:1'],
             message=None,
         )
+
+    def test_event_title_and_tags(self):
+        statsd = mock.MagicMock()
+        statsd.namespace = 'app_namespace'
+
+        collector = metrics.Collector(prefix='prefix', tags={'tag': 'collector_tag'}, statsd=statsd)
+        collector.event('event', 'hi!', tags={'tag': 'event_tag'})
+
+        statsd.event.assert_called_with(
+            'app_namespace.prefix.event',
+            'hi!',
+            alert_type=None,
+            source_type_name='my apps',
+            tags=['tag:event_tag', 'tag:collector_tag']
+        )
