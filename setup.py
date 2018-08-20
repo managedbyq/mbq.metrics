@@ -1,7 +1,7 @@
 import codecs
 import setuptools
 
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 
 with codecs.open('README.rst', 'r', 'utf-8') as f:
     readme = f.read()
