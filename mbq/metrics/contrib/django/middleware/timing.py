@@ -25,25 +25,22 @@ class TimingMiddleware(MiddlewareDeprecationMixin):
     def process_request(self, request):
         if request.path.strip('/') in SETTINGS['EXCLUDED_PATHS']:
             return request
-        setattr(request, '_mbq-metrics-start-time', time())
+        setattr(request, '_mbq_metrics_start_time', time())
 
     def process_response(self, request, response):
 
-        if not hasattr(request, '_mbq-metrics-start-time'):
-            return response
+        tags = {
+            'path': request.path,
+            'method': request.method,
+            'status_code': response.status_code,
+            'status_range': '{}xx'.format(response.status_code // 100),
+            'content_length': len(response.content)
+        }
+        metrics.increment('response', tags=tags)
 
-        duration = time() - getattr(request, '_mbq-metrics-start-time')
-        duration_ms = int(round(duration * 1000))
-
-        metrics.timing(
-            'response-time',
-            duration_ms,
-            tags={
-                'http-request-path': request.path,
-                'http-request-method': request.method,
-                'http-response-status': response.status_code,
-                'http-response-length': len(response.content)
-            }
-        )
+        if hasattr(request, '_mbq_metrics_start_time'):
+            duration = time() - request._mbq_metrics_start_time
+            duration_ms = int(round(duration * 1000))
+            metrics.timing('request_duration_ms', duration_ms, tags=tags)
 
         return response

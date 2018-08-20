@@ -17,26 +17,23 @@ class TimingMiddlewareTest(TestCase):
 
         time.side_effect = [1, 2]
 
-        timing_middleware = TimingMiddleware()
         request_mock = mock.Mock(path='test/path', method='POST')
+        timing_middleware = TimingMiddleware()
         timing_middleware.process_request(request_mock)
 
-        self.assertTrue(hasattr(request_mock, 'mbq-metrics-start-time'))
-        timing_middleware.process_response(
-            request_mock,
-            mock.MagicMock(status_code=200, content='test')
-        )
+        self.assertTrue(hasattr(request_mock, '_mbq_metrics_start_time'))
+        response_mock = mock.MagicMock(status_code=200, content='test')
+        timing_middleware.process_response(request_mock, response_mock)
 
-        metrics.timing.assert_called_with(
-            'response-time',
-            1000,
-            tags={
-                'http-request-path': 'test/path',
-                'http-request-method': 'POST',
-                'http-response-status': 200,
-                'http-response-length': 4,
-            }
-        )
+        tags = {
+            'path': 'test/path',
+            'method': 'POST',
+            'status_code': 200,
+            'status_range': '2xx',
+            'content_length': 4,
+        }
+        metrics.increment.assert_called_once_with('response', tags=tags)
+        metrics.timing.assert_called_once_with('request_duration_ms', 1000, tags=tags)
 
     @skipIf(StrictVersion(django.__version__) < StrictVersion('1.10'), 'Old Style Middleware')
     @mock.patch('mbq.metrics')
@@ -57,18 +54,14 @@ class TimingMiddlewareTest(TestCase):
         )
 
         timing_middleware = TimingMiddleware(get_response=get_response_mock)
+        timing_middleware(mock.Mock(path='test/path', method='POST'))
 
-        timing_middleware(
-            mock.Mock(path='test/path', method='POST')
-        )
-
-        metrics.timing.assert_called_with(
-            'response-time',
-            1000,
-            tags={
-                'http-request-path': 'test/path',
-                'http-request-method': 'POST',
-                'http-response-status': 200,
-                'http-response-length': 4,
-            }
-        )
+        tags = {
+            'path': 'test/path',
+            'method': 'POST',
+            'status_code': 200,
+            'status_range': '2xx',
+            'content_length': 4,
+        }
+        metrics.increment.assert_called_once_with('response', tags=tags)
+        metrics.timing.assert_called_once_with('request_duration_ms', 1000, tags=tags)
