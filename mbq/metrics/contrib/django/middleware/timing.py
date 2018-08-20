@@ -34,7 +34,8 @@ class TimingMiddleware(MiddlewareDeprecationMixin):
             'method': request.method,
             'status_code': response.status_code,
             'status_range': '{}xx'.format(response.status_code // 100),
-            'content_length': len(response.content)
+            # streaming responses don't have a content attribute
+            'content_length': len(response.content) if getattr(response, 'content', None) else None,
         }
         metrics.increment('response', tags=tags)
 
