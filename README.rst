@@ -39,7 +39,7 @@ Getting started
 
 HTTP Metrics with Django Middleware
 -----------------------------------
-This library also contains a piece of django middleware you can use to create an awesome `HTTP datadog dashboard <https://app.datadoghq.com/dash/893352>`_ for your service! The middleware reports the following metrics to datadog:
+This library also contains a piece of django middleware you can use to create an awesome `HTTP datadog dashboard <https://app.datadoghq.com/dash/893352>`_ for your service! The middleware reports the following metrics to Datadog:
 
 * Request duration in milliseconds
 * Status codes (200, 404, 503 etc)
