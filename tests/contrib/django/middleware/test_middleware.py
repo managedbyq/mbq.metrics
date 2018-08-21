@@ -8,6 +8,20 @@ from compat import mock
 
 class TimingMiddlewareTest(TestCase):
 
+    def test_sluggified_path_no_transforms(self):
+        from mbq.metrics.contrib.django.middleware.timing import _sluggified_path
+        self.assertEqual(_sluggified_path('/i/am/a/path'), '/i/am/a/path')
+
+    def test_sluggified_path_int_transforms(self):
+        from mbq.metrics.contrib.django.middleware.timing import _sluggified_path
+        self.assertEqual(_sluggified_path('/i/am/239847298374/path'), '/i/am/:id/path')
+
+    def test_sluggified_path_uuid_and_int_transforms(self):
+        from mbq.metrics.contrib.django.middleware.timing import _sluggified_path
+        self.assertEqual(
+            _sluggified_path('/i/am/88aa6219-9661-48fa-973a-6c60bbed1134/path/2394723948'),
+            '/i/am/:id/path/:id')
+
     @skipIf(StrictVersion(django.__version__) >= StrictVersion('1.10'), 'New Style Middleware')
     @mock.patch('mbq.metrics')
     @mock.patch('django.conf.settings')
@@ -54,10 +68,10 @@ class TimingMiddlewareTest(TestCase):
         )
 
         timing_middleware = TimingMiddleware(get_response=get_response_mock)
-        timing_middleware(mock.Mock(path='test/path', method='POST'))
+        timing_middleware(mock.Mock(path='test/path/123', method='POST'))
 
         tags = {
-            'path': 'test/path',
+            'path': 'test/path/:id',
             'method': 'POST',
             'status_code': 200,
             'status_range': '2xx',
