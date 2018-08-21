@@ -68,10 +68,10 @@ class TimingMiddlewareTest(TestCase):
         )
 
         timing_middleware = TimingMiddleware(get_response=get_response_mock)
-        timing_middleware(mock.Mock(path='test/path', method='POST'))
+        timing_middleware(mock.Mock(path='test/path/123', method='POST'))
 
         tags = {
-            'path': 'test/path',
+            'path': 'test/path/:id',
             'method': 'POST',
             'status_code': 200,
             'status_range': '2xx',
