@@ -37,6 +37,25 @@ Getting started
 
     # show the rest
 
+HTTP Metrics with Django Middleware
+-----------------------------------
+This library also contains a piece of django middleware you can use to create an awesome `HTTP datadog dashboard <https://app.datadoghq.com/dash/893352>` for your service! The middleware reports the following metrics to datadog:
+
+* Request duration in milliseconds
+* Status codes (200, 404, 503 etc)
+* Status ranges (2xx, 4xx, 5xx, etc)
+* Response content length
+* Request path
+
+Adding the middleware to your Django project and configuring the Datadog dashboard is quick and easy:
+
+1. Install ``mbq.metrics >= 0.2.1`` in your service (If you are already using the mbq.metrics middleware, upgrading to 0.2.1 will change the metric names being sent to datadog)
+2. Include ``mbq.metrics.contrib.django.middleware.timing.TimingMiddleware`` in the ``MIDDLEWARE`` constant in your ``settings.py`` file.
+3. Go to the `Invoicing HTTP Datadog dashboard <https://app.datadoghq.com/dash/893352>`. Click the gear in the top right and then “Clone Dashboard”.
+4. Name the new dashboard ``Yourservicename: HTTP``
+5. For each graph in your new dashboard, click edit, and change the metric from ``invoicing.response`` to ``Yourservicename.response``
+
+Tada!
 
 Testing
 -------
