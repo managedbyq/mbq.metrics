@@ -22,7 +22,7 @@ UUID_REGEX = re.compile('\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a
 
 
 def _sluggified_path(path):
-    return re.sub(UUID_REGEX, '/:id', re.sub(DIGIT_ID_REGEX, '/:id', path))
+    return re.sub(DIGIT_ID_REGEX, '/:id', re.sub(UUID_REGEX, '/:id', path))
 
 
 class TimingMiddleware(MiddlewareDeprecationMixin):
