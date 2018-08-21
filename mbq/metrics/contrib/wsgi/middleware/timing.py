@@ -20,7 +20,6 @@ class TimingMiddleware(object):
     def __call__(self, environ, start_response):
         """Meaure the time spent in the application."""
         start_time = time()
-        print(environ)
 
         def _start_response(status, headers, *args):
             self.status_code = int(status.split()[0])
