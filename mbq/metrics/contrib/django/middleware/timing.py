@@ -1,4 +1,3 @@
-import re
 from time import time
 
 from django.conf import settings
@@ -8,6 +7,7 @@ except ImportError:
     MiddlewareDeprecationMixin = object
 
 from mbq import metrics
+from mbq.metrics.contrib import utils
 
 SETTINGS = {
     'EXCLUDED_PATHS': set()
@@ -16,13 +16,6 @@ SETTINGS.update(
     getattr(settings, 'MBQ_METRICS', {})
 )
 SETTINGS['EXCLUDED_PATHS'] = {path.strip('/') for path in SETTINGS['EXCLUDED_PATHS']}
-
-DIGIT_ID_REGEX = re.compile('\/[0-9]+')
-UUID_REGEX = re.compile('\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
-
-
-def _sluggified_path(path):
-    return re.sub(DIGIT_ID_REGEX, '/:id', re.sub(UUID_REGEX, '/:id', path))
 
 
 class TimingMiddleware(MiddlewareDeprecationMixin):
@@ -37,14 +30,13 @@ class TimingMiddleware(MiddlewareDeprecationMixin):
 
     def process_response(self, request, response):
 
-        tags = {
-            'path': _sluggified_path(request.path),
-            'method': request.method,
-            'status_code': response.status_code,
-            'status_range': '{}xx'.format(response.status_code // 100),
-            # streaming responses don't have a content attribute
-            'content_length': len(response.content) if getattr(response, 'content', None) else None,
-        }
+        tags = utils.compute_tags(
+            response.status_code,
+            request.path,
+            request.method,
+            content=getattr(response, 'content', None),
+        )
+
         metrics.increment('response', tags=tags)
 
         if hasattr(request, '_mbq_metrics_start_time'):

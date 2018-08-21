@@ -1,6 +1,15 @@
+import re
 from time import time
 
 from mbq import metrics
+from mbq.metrics.contrib import utils
+
+DIGIT_ID_REGEX = re.compile('\/[0-9]+')
+UUID_REGEX = re.compile('\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
+
+
+def _sluggified_path(path):
+    return re.sub(DIGIT_ID_REGEX, '/:id', re.sub(UUID_REGEX, '/:id', path))
 
 
 class TimingMiddleware(object):
@@ -19,12 +28,12 @@ class TimingMiddleware(object):
 
         response = self.app(environ, _start_response)
 
-        tags = {
-            'path': environ.get('PATH_INFO'),
-            'method': environ.get('REQUEST_METHOD'),
-            'status_code': self.status_code,
-            'status_range': '{}xx'.format(self.status_code // 100),
-        }
+        tags = utils.compute_tags(
+            self.status_code,
+            environ.get('PATH_INFO', ''),
+            environ.get('REQUEST_METHOD'),
+        )
+
         metrics.increment('response', tags=tags)
 
         duration = time() - start_time
