@@ -1,15 +1,7 @@
-import re
 from time import time
 
 from mbq import metrics
 from mbq.metrics.contrib import utils
-
-DIGIT_ID_REGEX = re.compile('\/[0-9]+')
-UUID_REGEX = re.compile('\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
-
-
-def _sluggified_path(path):
-    return re.sub(DIGIT_ID_REGEX, '/:id', re.sub(UUID_REGEX, '/:id', path))
 
 
 class TimingMiddleware(object):
