@@ -8,7 +8,7 @@ def _sluggified_path(path):
     return re.sub(DIGIT_ID_REGEX, '/:id', re.sub(UUID_REGEX, '/:id', path))
 
 
-def get_response_metrics_tags(status_code, path, method, content=None):
+def get_response_metrics_tags(status_code, path, method):
     return {
         'path': _sluggified_path(path),
         'method': method,

@@ -34,7 +34,6 @@ class TimingMiddleware(MiddlewareDeprecationMixin):
             response.status_code,
             request.path,
             request.method,
-            content=getattr(response, 'content', None),
         )
 
         metrics.increment('response', tags=tags)
