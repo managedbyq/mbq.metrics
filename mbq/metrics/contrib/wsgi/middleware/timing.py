@@ -18,7 +18,7 @@ class TimingMiddleware(object):
 
         response = self.app(environ, _start_response)
 
-        tags = utils.compute_tags(
+        tags = utils.get_response_metrics_tags(
             self.status_code,
             environ.get('PATH_INFO', ''),
             environ.get('REQUEST_METHOD'),

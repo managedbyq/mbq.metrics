@@ -44,7 +44,6 @@ class TimingMiddlewareTest(TestCase):
             'method': 'POST',
             'status_code': 200,
             'status_range': '2xx',
-            'content_length': 4,
         }
         metrics.increment.assert_called_once_with('response', tags=tags)
         metrics.timing.assert_called_once_with('request_duration_ms', 1000, tags=tags)
@@ -75,7 +74,6 @@ class TimingMiddlewareTest(TestCase):
             'method': 'POST',
             'status_code': 200,
             'status_range': '2xx',
-            'content_length': 4,
         }
         metrics.increment.assert_called_once_with('response', tags=tags)
         metrics.timing.assert_called_once_with('request_duration_ms', 1000, tags=tags)
@@ -108,7 +106,6 @@ class TimingMiddlewareTest(TestCase):
             'method': 'POST',
             'status_code': 400,
             'status_range': '4xx',
-            'content_length': None,
         }
         metrics.increment.assert_called_once_with('response', tags=tags)
         metrics.timing.assert_called_once_with('request_duration_ms', 1000, tags=tags)

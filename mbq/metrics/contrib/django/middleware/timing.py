@@ -30,7 +30,7 @@ class TimingMiddleware(MiddlewareDeprecationMixin):
 
     def process_response(self, request, response):
 
-        tags = utils.compute_tags(
+        tags = utils.get_response_metrics_tags(
             response.status_code,
             request.path,
             request.method,
