@@ -60,7 +60,7 @@ Tada!
 HTTP Metrics with WSGI Middleware (Flask)
 -----------------------------------------
 
-Middleware is also included that can be easily plugged into a Flask app to generate the same sort of metrics referenced in the Django section above.
+Middleware is also included that can be easily plugged into a Flask app to generate the same sort of metrics referenced in the Django section above. Requires mbq.metrics >= 0.3.0.
 
 See `the implementation in Isengard <https://github.com/managedbyq/isengard/pull/51/files>`_ for an example.
 
