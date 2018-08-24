@@ -72,6 +72,13 @@ install and run tox:
     $ tox -e py36-django111
     $
 
+Shipping a New Release
+----------------------
+
+1. Bump the version in `setup.py`
+2. Go to `Releases` in GitHub and "Draft a New Release"
+3. After creating a new release, Travis CI will pick up the new release and ship it to PyPi
+
 FAQs
 ----
 
