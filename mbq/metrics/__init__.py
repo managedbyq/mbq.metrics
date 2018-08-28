@@ -104,8 +104,8 @@ class Collector(object):
     def timed(self, metric, tags=None, use_ms=None):
         return _statsd.timed(
             self._combine_metric(metric),
-            use_ms=use_ms,
             tags=self._combine_tags(tags),
+            use_ms=use_ms,
         )
 
     def timing(self, metric, value, tags=None):
