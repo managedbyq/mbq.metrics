@@ -22,15 +22,19 @@ def init(namespace=None, constant_tags=None):
         logger.warning('mbq.metrics already initialized. Ignoring re-init.')
         return
 
+    _statsd = create_statsd(namespace=namespace, constant_tags=constant_tags)
+    _initialized = True
+
+
+def create_statsd(namespace=None, constant_tags=None):
     if constant_tags:
         constant_tags = utils.tag_dict_to_list(constant_tags)
 
-    _statsd = datadog.DogStatsd(
+    return datadog.DogStatsd(
         namespace=namespace,
         constant_tags=constant_tags,
         use_default_route=True,  # assumption: code is running in a container
     )
-    _initialized = True
 
 
 class Collector(object):
