@@ -58,7 +58,11 @@ class Collector(object):
         pass
 
     def _combine_metric(self, metric):
-        combined_names = [self.namespace if self.namespace else _namespace]
+        combined_names = []
+        if self.namespace:
+            combined_names.append(self.namespace)
+        elif _namespace:
+            combined_names.append(_namespace)
 
         if self.prefix:
             combined_names.append(self.prefix)
