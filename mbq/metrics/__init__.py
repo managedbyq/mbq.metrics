@@ -13,31 +13,32 @@ UNKNOWN = datadog.DogStatsd.UNKNOWN
 logger = logging.getLogger('mbq.metrics')
 
 _initialized = False
+_namespace = None
+_constant_tags = {}
 _statsd = utils.NullStatsd()
 
 
 def init(namespace=None, constant_tags=None):
-    global _initialized, _statsd
+    global _initialized, _namespace, _constant_tags, _statsd
     if _initialized:
         logger.warning('mbq.metrics already initialized. Ignoring re-init.')
         return
 
     if constant_tags:
-        constant_tags = utils.tag_dict_to_list(constant_tags)
+        _constant_tags = constant_tags
 
+    _namespace = namespace
     _statsd = datadog.DogStatsd(
-        namespace=namespace,
-        constant_tags=constant_tags,
         use_default_route=True,  # assumption: code is running in a container
     )
     _initialized = True
 
 
 class Collector(object):
-    def __init__(self, prefix=None, tags=None, statsd=None):
+    def __init__(self, prefix=None, tags=None, namespace=None):
         self.prefix = prefix
-        self.tags = tags or {}
-        self._statsd = statsd
+        self.tags = tags if tags else {}
+        self.namespace = namespace
 
     def __call__(self, func):
         @functools.wraps(func)
@@ -56,32 +57,26 @@ class Collector(object):
     def __exit__(self, type, value, traceback):
         pass
 
-    @property
-    def statsd(self):
-        return self._statsd or _statsd
-
     def _combine_metric(self, metric):
-        if not self.prefix:
-            return metric
+        combined_names = [self.namespace if self.namespace else _namespace]
 
-        return '.'.join([self.prefix, metric])
+        if self.prefix:
+            combined_names.append(self.prefix)
+
+        if metric:
+            combined_names.append(metric)
+
+        return '.'.join(combined_names)
 
     def _combine_tags(self, tags):
-        if not tags:
-            tags = []
-        elif isinstance(tags, dict):
-            tags = utils.tag_dict_to_list(tags)
-
-        return tags + utils.tag_dict_to_list(self.tags)
+        combined_tags = _constant_tags.copy()
+        combined_tags.update(self.tags)
+        combined_tags.update(tags if tags else {})
+        return utils.tag_dict_to_list(combined_tags)
 
     def event(self, title, text, alert_type=None, tags=None):
-        event_title = self._combine_metric(title)
-
-        if self.statsd.namespace:
-            event_title = self.statsd.namespace + '.' + event_title
-
-        self.statsd.event(
-            event_title,
+        _statsd.event(
+            self._combine_metric(title),
             text,
             alert_type=alert_type,
             tags=self._combine_tags(tags),
@@ -89,28 +84,28 @@ class Collector(object):
         )
 
     def gauge(self, metric, value, tags=None):
-        self.statsd.gauge(
+        _statsd.gauge(
             self._combine_metric(metric),
             value,
             tags=self._combine_tags(tags),
         )
 
     def increment(self, metric, value=1, tags=None):
-        self.statsd.increment(
+        _statsd.increment(
             self._combine_metric(metric),
             value=value,
             tags=self._combine_tags(tags),
         )
 
     def timed(self, metric, tags=None, use_ms=None):
-        return self.statsd.timed(
+        return _statsd.timed(
             self._combine_metric(metric),
-            tags=self._combine_tags(tags),
             use_ms=use_ms,
+            tags=self._combine_tags(tags),
         )
 
     def timing(self, metric, value, tags=None):
-        self.statsd.timing(
+        _statsd.timing(
             self._combine_metric(metric),
             value,
             tags=self._combine_tags(tags),
@@ -119,16 +114,12 @@ class Collector(object):
     def service_check(self, check_name, status, tags=None, message=None):
         # the dogstatsd client doesn't use namespace or constant_tags
         # for service_check but we want to be consistent
-
-        check_name = self._combine_metric(check_name)
-        if self.statsd.namespace:
-            check_name = self.statsd.namespace + '.' + check_name
-
-        tags = self._combine_tags(tags)
-        if self.statsd.constant_tags:
-            tags += self.statsd.constant_tags
-
-        self.statsd.service_check(check_name, status, tags=tags, message=message)
+        _statsd.service_check(
+            self._combine_metric(check_name),
+            status,
+            tags=self._combine_tags(tags),
+            message=message
+        )
 
 
 # expose as module-level functions

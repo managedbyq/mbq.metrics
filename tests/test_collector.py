@@ -28,12 +28,17 @@ class CollectorTests(TestCase):
             ['test', 't:1'],
         )
 
-    def test_service_check_name_and_tags(self):
-        statsd = mock.MagicMock()
-        statsd.namespace = 'namespace'
-        statsd.constant_tags = ['constant:1']
-
-        collector = metrics.Collector(prefix='prefix', tags={'t': 1}, statsd=statsd)
+    @mock.patch('datadog.DogStatsd')
+    # @mock.patch('datadog.DogStatsd.service_check')
+    def test_service_check_name_and_tags(self, DogStatsd):
+        statsd = mock.Mock()
+        DogStatsd.return_value = statsd
+        metrics.init()
+        collector = metrics.Collector(
+            prefix='prefix',
+            namespace='namespace',
+            tags={'constant': 1, 't': 1},
+        )
         collector.service_check('service_name', 1, tags={'t': 2})
 
         statsd.service_check.assert_called_with(
