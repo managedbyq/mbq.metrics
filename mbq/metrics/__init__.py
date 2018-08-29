@@ -15,11 +15,13 @@ logger = logging.getLogger('mbq.metrics')
 _initialized = False
 _namespace = None
 _constant_tags = {}
-_statsd = utils.NullStatsd()
+_statsd = datadog.DogStatsd(
+    use_default_route=True,  # assumption: code is running in a container
+)
 
 
 def init(namespace=None, constant_tags=None):
-    global _initialized, _namespace, _constant_tags, _statsd
+    global _initialized, _namespace, _constant_tags
     if _initialized:
         logger.warning('mbq.metrics already initialized. Ignoring re-init.')
         return
@@ -28,9 +30,6 @@ def init(namespace=None, constant_tags=None):
         _constant_tags = constant_tags
 
     _namespace = namespace
-    _statsd = datadog.DogStatsd(
-        use_default_route=True,  # assumption: code is running in a container
-    )
     _initialized = True
 
 
@@ -59,7 +58,13 @@ class Collector(object):
 
     @property
     def namespace(self):
-        return self._namespace if self._namespace else _namespace
+        namespace = self._namespace if self._namespace else _namespace
+        if not namespace:
+            raise ValueError(
+                'Collector must have a namespace. Either pass in a namespace to the constructor '
+                'or call the mbq.metrics.init function to set a global default namespace.'
+            )
+        return namespace
 
     @property
     def tags(self):
