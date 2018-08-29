@@ -37,8 +37,8 @@ def init(namespace=None, constant_tags=None):
 class Collector(object):
     def __init__(self, prefix=None, tags=None, namespace=None):
         self.prefix = prefix
-        self.tags = tags if tags else {}
-        self.namespace = namespace
+        self._tags = tags if tags else {}
+        self._namespace = namespace
 
     def __call__(self, func):
         @functools.wraps(func)
@@ -57,12 +57,20 @@ class Collector(object):
     def __exit__(self, type, value, traceback):
         pass
 
+    @property
+    def namespace(self):
+        return self._namespace if self._namespace else _namespace
+
+    @property
+    def tags(self):
+        tags = _constant_tags.copy()
+        tags.update(self.tags)
+        return tags
+
     def _combine_metric(self, metric):
         combined_names = []
         if self.namespace:
             combined_names.append(self.namespace)
-        elif _namespace:
-            combined_names.append(_namespace)
 
         if self.prefix:
             combined_names.append(self.prefix)
@@ -73,8 +81,7 @@ class Collector(object):
         return '.'.join(combined_names)
 
     def _combine_tags(self, tags):
-        combined_tags = _constant_tags.copy()
-        combined_tags.update(self.tags)
+        combined_tags = self.tags
         combined_tags.update(tags if tags else {})
         return utils.tag_dict_to_list(combined_tags)
 
