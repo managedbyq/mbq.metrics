@@ -15,28 +15,33 @@ logger = logging.getLogger('mbq.metrics')
 _initialized = False
 _namespace = None
 _constant_tags = {}
-_statsd = datadog.DogStatsd(
-    use_default_route=True,  # assumption: code is running in a container
-)
+_statsd = utils.NullStatsd()
+
+
+def _is_initialized():
+    return _is_initialized
 
 
 def init(namespace=None, constant_tags=None):
-    global _initialized, _namespace, _constant_tags
-    if _initialized:
+    global _statsd, _initialized, _namespace, _constant_tags
+    if _is_initialized():
         logger.warning('mbq.metrics already initialized. Ignoring re-init.')
         return
 
-    if constant_tags:
-        _constant_tags = constant_tags
+    _constant_tags = constant_tags or {}
 
     _namespace = namespace
+    _statsd = datadog.DogStatsd(
+        use_default_route=True,  # assumption: code is running in a container
+    )
+
     _initialized = True
 
 
 class Collector(object):
     def __init__(self, prefix=None, tags=None, namespace=None):
         self.prefix = prefix
-        self._tags = tags if tags else {}
+        self._tags = tags or {}
         self._namespace = namespace
 
     def __call__(self, func):
@@ -58,7 +63,7 @@ class Collector(object):
 
     @property
     def namespace(self):
-        namespace = self._namespace if self._namespace else _namespace
+        namespace = self._namespace or _namespace
         if not namespace:
             raise ValueError(
                 'Collector must have a namespace. Either pass in a namespace to the constructor '
@@ -69,7 +74,7 @@ class Collector(object):
     @property
     def tags(self):
         tags = _constant_tags.copy()
-        tags.update(self.tags)
+        tags.update(self._tags)
         return tags
 
     def _combine_metric(self, metric):
@@ -87,7 +92,7 @@ class Collector(object):
 
     def _combine_tags(self, tags):
         combined_tags = self.tags
-        combined_tags.update(tags if tags else {})
+        combined_tags.update(tags or {})
         return utils.tag_dict_to_list(combined_tags)
 
     def event(self, title, text, alert_type=None, tags=None):

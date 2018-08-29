@@ -13,15 +13,17 @@ class GlobalTests(unittest.TestCase):
         metrics._initialized = False
         metrics._statsd = utils.NullStatsd()
 
+    @mock.patch('mbq.metrics._is_initialized', return_value=False)
     @mock.patch('datadog.DogStatsd')
-    def test_init(self, DogStatsd):
+    def test_init(self, DogStatsd, _is_initialized):
         metrics.init()
         self.assertTrue(DogStatsd.called)
         self.assertTrue(metrics._initialized)
         self.assertNotIsInstance(metrics._statsd, utils.NullStatsd)
 
+    @mock.patch('mbq.metrics._is_initialized', return_value=False)
     @mock.patch('datadog.DogStatsd')
-    def test_default_collector(self, DogStatsd):
+    def test_default_collector(self, DogStatsd, _is_initialized):
         metrics.init()
         self.assertNotIsInstance(metrics._statsd, utils.NullStatsd)
 
