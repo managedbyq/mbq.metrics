@@ -9,9 +9,6 @@ class MetricsError(Exception):
     pass
 
 
-class NoNameSpaceError(Exception):
-    pass
-
 class NullStatsd:
     def __getattr__(self, attr):
         raise MetricsError('statsd has not been properly initialized')

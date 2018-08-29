@@ -12,6 +12,10 @@ class CollectorTests(TestCase):
         metrics.init()
 
     def test_combine_metric(self, DogStatsd, _is_initialized):
+        collector = metrics.Collector(prefix='test1')
+        with self.assertRaises(ValueError):
+            collector._combine_metric('test2'),
+
         collector = metrics.Collector(namespace='namespace', prefix='test1')
         self.assertEqual(
             collector._combine_metric('test2'),
@@ -63,8 +67,8 @@ class CollectorTests(TestCase):
             ['t:1', 'v:3', 'u:2'],
         )
         self.assertEqual(
-            collector._combine_tags({'test': 2}),
-            ['t:1', 'v:3', 'u:2', 'test:2'],
+            collector._combine_tags({'test': 2, 'v': 4}),
+            ['t:1', 'v:4', 'u:2', 'test:2'],
         )
 
     def test_service_check_name_and_tags(self, DogStatsd, _is_initialized):

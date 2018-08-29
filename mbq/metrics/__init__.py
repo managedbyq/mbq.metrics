@@ -81,21 +81,19 @@ class Collector(object):
         if not metric:
             raise ValueError('Must include a metric name')
 
-        combined_names = []
-        if self.namespace:
-            combined_names.append(self.namespace)
+        combined_names = [self.namespace]
 
         if self.prefix:
             combined_names.append(self.prefix)
 
-        if metric:
-            combined_names.append(metric)
+        combined_names.append(metric)
 
         return '.'.join(combined_names)
 
     def _combine_tags(self, tags):
         combined_tags = self.tags
-        combined_tags.update(tags or {})
+        if tags:
+            combined_tags.update(tags)
         return utils.tag_dict_to_list(combined_tags)
 
     def event(self, title, text, alert_type=None, tags=None):
