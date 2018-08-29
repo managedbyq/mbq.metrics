@@ -18,13 +18,9 @@ _constant_tags = {}
 _statsd = utils.NullStatsd()
 
 
-def _is_initialized():
-    return _is_initialized
-
-
 def init(namespace=None, constant_tags=None):
     global _statsd, _initialized, _namespace, _constant_tags
-    if _is_initialized():
+    if _initialized:
         logger.warning('mbq.metrics already initialized. Ignoring re-init.')
         return
 

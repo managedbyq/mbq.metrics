@@ -5,13 +5,16 @@ from mbq import metrics
 from tests.compat import mock
 
 
-@mock.patch('mbq.metrics._is_initialized', return_value=False)
+@mock.patch('mbq.metrics._initialized', False)
 @mock.patch('datadog.DogStatsd')
 class CollectorTests(TestCase):
-    def setUp(self):
+
+    @mock.patch('mbq.metrics._initialized', False)
+    @mock.patch('datadog.DogStatsd')
+    def setUp(self, DogStatsd):
         metrics.init()
 
-    def test_combine_metric(self, DogStatsd, _is_initialized):
+    def test_combine_metric(self, DogStatsd):
         collector = metrics.Collector(prefix='test1')
         with self.assertRaises(ValueError):
             collector._combine_metric('test2'),
@@ -42,7 +45,7 @@ class CollectorTests(TestCase):
             'default_namespace.test1.test2',
         )
 
-    def test_combine_tags(self, DogStatsd, _is_initialized):
+    def test_combine_tags(self, DogStatsd):
         collector = metrics.Collector(tags={'t': 1, 'u': 2})
         self.assertEqual(
             collector._combine_tags({'t': 2}),
@@ -71,7 +74,7 @@ class CollectorTests(TestCase):
             ['t:1', 'v:4', 'u:2', 'test:2'],
         )
 
-    def test_service_check_name_and_tags(self, DogStatsd, _is_initialized):
+    def test_service_check_name_and_tags(self, DogStatsd):
         statsd = mock.Mock()
         DogStatsd.return_value = statsd
         metrics.init(namespace='constant_namespace')
@@ -89,7 +92,7 @@ class CollectorTests(TestCase):
             message=None,
         )
 
-    def test_event_title_and_tags(self, DogStatsd, _is_initialized):
+    def test_event_title_and_tags(self, DogStatsd):
         statsd = mock.Mock()
         DogStatsd.return_value = statsd
         metrics.init(namespace='app_namespace', constant_tags={'a': 1, 'tag': 'constant'})
