@@ -78,6 +78,9 @@ class Collector(object):
         return tags
 
     def _combine_metric(self, metric):
+        if not metric:
+            raise ValueError('Must include a metric name')
+
         combined_names = []
         if self.namespace:
             combined_names.append(self.namespace)
