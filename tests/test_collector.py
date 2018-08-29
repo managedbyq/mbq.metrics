@@ -56,22 +56,22 @@ class CollectorTests(TestCase):
             ['t:1', 'u:2'],
         )
         self.assertEqual(
-            collector._combine_tags({'test': 2}),
-            ['t:1', 'u:2', 'test:2'],
+            collector._combine_tags({'s': 2}),
+            ['s:2', 't:1', 'u:2'],
         )
 
         metrics.init(constant_tags={'t': 0, 'v': 3})
         self.assertEqual(
             collector._combine_tags({'t': 2}),
-            ['t:2', 'v:3', 'u:2'],
+            ['t:2', 'u:2', 'v:3'],
         )
         self.assertEqual(
             collector._combine_tags(None),
-            ['t:1', 'v:3', 'u:2'],
+            ['t:1', 'u:2', 'v:3'],
         )
         self.assertEqual(
-            collector._combine_tags({'test': 2, 'v': 4}),
-            ['t:1', 'v:4', 'u:2', 'test:2'],
+            collector._combine_tags({'s': 2, 'v': 4}),
+            ['s:2', 't:1', 'u:2', 'v:4'],
         )
 
     def test_service_check_name_and_tags(self, DogStatsd):
