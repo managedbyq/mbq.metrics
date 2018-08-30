@@ -1,23 +1,31 @@
 import codecs
+import os
 
 import setuptools
 
 
-__version__ = '0.4.1'
+here = os.path.abspath(os.path.dirname(__file__))
 
 with codecs.open('README.rst', 'r', 'utf-8') as f:
     readme = f.read()
 
+about = {}
+with open(os.path.join(here, 'mbq', 'metrics', '__version__.py'), 'r', 'utf-8') as f:
+    exec(f.read(), about)
+
+
 setuptools.setup(
-    name='mbq.metrics',
+    name=about['__title__'],
+    description=about['__description__'],
     long_description=readme,
-    version=__version__,
-    license='Apache 2.0',
-    url='https://github.com/managedbyq/mbq.metrics',
-    author='Managed by Q, Inc.',
-    author_email='open-source@managedbyq.com',
-    maintainer='Managed by Q, Inc.',
-    maintainer_email='open-source@managedbyq.com',
+    long_description_content_type='text/x-rst',
+    version=about['__version__'],
+    license=about['__license__'],
+    url=about['__url__'],
+    author=about['__author__'],
+    author_email=about['__author_email__'],
+    maintainer=about['__author__'],
+    maintainer_email=about['__author_email__'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
