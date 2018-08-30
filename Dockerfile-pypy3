@@ -1,8 +1,0 @@
-FROM pypy:3-6.0-slim-jessie
-
-ENV PYTHON_VERSION pypy3
-
-WORKDIR /app
-COPY test-requirements.txt .
-RUN pip install --upgrade --requirement test-requirements.txt
-COPY . .

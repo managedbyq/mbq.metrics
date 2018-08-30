@@ -1,6 +1,0 @@
-flake8
-pip
-setuptools
-tox
-twine
-wheel

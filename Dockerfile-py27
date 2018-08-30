@@ -1,8 +1,0 @@
-FROM python:2.7-slim-stretch
-
-ENV PYTHON_VERSION py27
-
-WORKDIR /app
-COPY test-requirements.txt .
-RUN pip install --upgrade --requirement test-requirements.txt
-COPY . .
