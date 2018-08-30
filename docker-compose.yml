@@ -1,0 +1,51 @@
+---
+version: '3'
+
+services:
+  py27:
+    build:
+      context: .
+      args:
+        IMAGE: 'python:2.7-slim-stretch'
+    volumes:
+      - .:/app
+    environment:
+      TOX_WORK_DIR: /tox
+      PYTHON_VERSION: py27
+    command: [./test.sh]
+
+  py36:
+    build:
+      context: .
+      args:
+        IMAGE: 'python:3.6-slim-stretch'
+    volumes:
+      - .:/app
+    environment:
+      TOX_WORK_DIR: /tox
+      PYTHON_VERSION: py36
+    command: [./test.sh]
+
+  py37:
+    build:
+      context: .
+      args:
+        IMAGE: 'python:3.7-slim-stretch'
+    volumes:
+      - .:/app
+    environment:
+      TOX_WORK_DIR: /tox
+      PYTHON_VERSION: py37
+    command: [./test.sh]
+
+  pypy3:
+    build:
+      context: .
+      args:
+        IMAGE: 'pypy:3-6.0-slim-jessie'
+    volumes:
+      - .:/app
+    environment:
+      TOX_WORK_DIR: /tox
+      PYTHON_VERSION: pypy3
+    command: [./test.sh]
