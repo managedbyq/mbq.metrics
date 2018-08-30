@@ -1,43 +1,43 @@
 sudo: false
 language: python
-python:
-  - 3.7-dev
-  - pypy3
 cache: pip
 
 matrix:
   include:
     - python: 2.7
-      env: TOXENV=py27-django19
-    - python: 2.7
-      env: TOXENV=py27-django110
+      env: TOXENV=py27-django111
+
     - python: 3.5
-      env: TOXENV=py35-django19
-    - python: 3.5
-      env: TOXENV=py35-django110
-    - python: 3.6
-      env: TOXENV=py36-django19
-    - python: 3.6
-      env: TOXENV=py36-django110
+      env: TOXENV=py35-django111
+
     - python: 3.6
       env: TOXENV=py36-django111
-    - python: pypy
-      env: TOXENV=pypy-django111
+    - python: 3.6
+      env: TOXENV=py36-django20
+    - python: 3.6
+      env: TOXENV=py36-django21
 
-  allow_failures:
-    - python: 3.7-dev
+    - python: 3.7
+      env: TOXENV=py37-django111
+    - python: 3.7
+      env: TOXENV=py37-django20
+    - python: 3.7
+      env: TOXENV=py37-django21
+
     - python: pypy3
+      env: TOXENV=pypy3-django111
+    - python: pypy3
+      env: TOXENV=pypy3-django20
+    - python: pypy3
+      env: TOXENV=pypy3-django21
 
 install:
   - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then travis_retry pip install mock; fi
-  - travis_retry pip install --upgrade pip setuptools wheel twine flake8 tox
-  - pip install .
-  - if [[ ! $TOXENV ]]; then pip install -r test-requirements.txt || travis_terminate 1; fi
+  - travis_retry pip install --upgrade --requirement test-requirements.txt
 
 script:
   - flake8
-  - if [[ $TOXENV ]]; then tox -e $TOXENV || travis_terminate 1; fi
-  - if [[ ! $TOXENV ]]; then python -Wall -m unittest discover tests || travis_terminate 1; fi
+  - tox -e $TOXENV || travis_terminate 1
 
 notifications:
   email: false
@@ -48,7 +48,8 @@ deploy:
   password:
     secure: oCTlYd6hDpkRyArN5cFBoLs5UIqeOXgMDGrgDLpS2m8l9tKMz+hbEK4oTikrZUgmlOrrmG8tWVIXkciyHBI71LVlUp61aSaTo0/SdJIousxSbQT7uI6IUvlvjEBYI+lCk7zjE4Tr9cVOGwtWqrlWRUrGh6b7NhtVRUMRTYGuno/cKCDz3HUde0ITjuroPiFkkdYBXs4xyheKzPgYx0v99XBfC3ELOFBLUzWeJHjNHfNSBkCCt7g5uAMyAuvNiU+PkFzEcsLIN+mGElOJKKDawhaT3/K1sePq9kXtKf5mnwNncq7r74wL0lKJtnCEmzfGZpmPMTJCLzTL1WkTCbkGAExnbnuWvypu/FtHWx+FQNjs9p+UzXleKcELmAzcDfsqmF+lCn8hCf02rTJZgwRlZz1/uQw8ZT1GVyAYywrRt5bedLL4+NHbKh//YA5WU3Y37KAqy1EtL+xX9XJ4So9AbHZ0TjJM8r0i+64p5vMM9HmmZmsssNwnZaAJXDmf4Lb5fG7vGmFmXy78dKRdWxd1dx9/js+3/SbVLNUaty92QoX+ympzElarsQztl0jmb1HeO25X6SUtctdPSqmZfSBjWXDCzf31XdoqTumtetUqzQnV7hcC1bwKZ/HwjlUstGTVvx0UT1387Mq+zY3tMbn4/z+lCqKRGPpE8AevKaK5yeQ=
   on:
-    tags: true
-    distributions: sdist bdist_wheel
-    python: '3.6'
     repo: managedbyq/mbq.metrics
+    branch: master
+    tags: true
+    python: '3.6'
+    distributions: sdist bdist_wheel

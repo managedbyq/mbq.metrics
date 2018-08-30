@@ -1,1 +1,6 @@
-Django==1.11.5
+flake8
+pip
+setuptools
+tox
+twine
+wheel

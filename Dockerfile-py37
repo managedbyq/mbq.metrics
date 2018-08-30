@@ -1,0 +1,8 @@
+FROM python:3.7-slim-stretch
+
+ENV PYTHON_VERSION py37
+
+WORKDIR /app
+COPY test-requirements.txt .
+RUN pip install --upgrade --requirement test-requirements.txt
+COPY . .

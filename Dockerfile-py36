@@ -1,0 +1,9 @@
+FROM python:3.6-slim-stretch
+
+ENV PYTHON_VERSION py36
+
+WORKDIR /app
+COPY test-requirements.txt .
+RUN pip install --upgrade --requirement test-requirements.txt
+COPY . .
+CMD ./test.sh
