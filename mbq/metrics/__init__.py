@@ -12,25 +12,22 @@ UNKNOWN = datadog.DogStatsd.UNKNOWN
 
 logger = logging.getLogger('mbq.metrics')
 
+_constant_tags = {}
 _initialized = False
 _namespace = None
-_constant_tags = {}
-_statsd = utils.NullStatsd()
+_statsd = datadog.DogStatsd(
+    use_default_route=True,  # assumption: code is running in a container
+)
 
 
 def init(namespace=None, constant_tags=None):
-    global _statsd, _initialized, _namespace, _constant_tags
+    global _constant_tags, _initialized, _namespace
     if _initialized:
         logger.warning('mbq.metrics already initialized. Ignoring re-init.')
         return
 
     _constant_tags = constant_tags or {}
-
     _namespace = namespace
-    _statsd = datadog.DogStatsd(
-        use_default_route=True,  # assumption: code is running in a container
-    )
-
     _initialized = True
 
 
