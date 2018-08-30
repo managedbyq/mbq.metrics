@@ -7,4 +7,3 @@ build
 dist
 pip-log.txt
 .tox
-
