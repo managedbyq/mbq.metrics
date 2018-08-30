@@ -1,5 +1,7 @@
 import codecs
+
 import setuptools
+
 
 __version__ = '0.4.1'
 
