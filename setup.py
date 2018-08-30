@@ -33,11 +33,13 @@ setuptools.setup(
     install_requires=[
         'datadog==0.22.0',  # pinned until 1.0.0
     ],
-    test_requires=[
-        'flake8',
-        'tox',
-        'tox-travis',
-        'tox-venv',
-    ],
+    extras={
+        'test': [
+            'flake8',
+            'tox',
+            'tox-travis',
+            'tox-venv',
+        ],
+    },
     zip_safe=True,
 )
