@@ -1,3 +1,4 @@
+from collections import Counter
 from datetime import datetime, timedelta
 import logging
 
@@ -50,23 +51,14 @@ class ConnectionStatsMiddleware(object):
         return self._local_port_range
 
     def report_metrics(self):
-        established_connections, waiting_connections = 0, 0
         with open('/proc/net/tcp', 'r') as f:
-            for line in f.read().splitlines()[1:]:
-                parts = line.strip().split(' ')
-                local_low, local_high = self.local_port_range
-                local_address, local_port = parts[1].split(':')
+            local_low, local_high = self.local_port_range
+            all_connections = [conn.strip().split(' ')
+                               for conn in f.read().splitlines()[1:]]
+            local_connections = [conn for conn in all_connections
+                                 if not local_low <= int(conn[1].split(':')[1], 16) <= local_high]
 
-                # If connection's local port is in the "local port" range,
-                # we treat it like an outgoing connection and skip it
-                if local_low <= int(local_port, 16) <= local_high:
-                    continue
+        states = Counter(int(conn[3], 16) for conn in local_connections)
 
-                state_int = int(parts[3], 16)
-                if state_int == ESTABLISHED_STATE:
-                    established_connections += 1
-                elif state_int == SYN_RECV_STATE:
-                    waiting_connections += 1
-
-        metrics.gauge('connections', established_connections, {'state': 'active'})
-        metrics.gauge('connections', waiting_connections, {'state': 'queued'})
+        metrics.gauge('connections', states[ESTABLISHED_STATE], {'state': 'active'})
+        metrics.gauge('connections', states[SYN_RECV_STATE], {'state': 'queued'})
