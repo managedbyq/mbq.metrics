@@ -1,8 +1,6 @@
 from datetime import datetime, timedelta
 import logging
 
-from django.conf import settings
-
 from mbq import metrics
 
 # https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/net/tcp_states.h?id=HEAD
@@ -28,6 +26,7 @@ class ConnectionStatsMiddleware(object):
         self.get_response = get_response
 
     def __call__(self, request):
+        global LAST_REPORT
         if datetime.now() > LAST_REPORT + REPORTING_INTERVAL:
             LAST_REPORT = datetime.now()
             try:
@@ -48,5 +47,5 @@ class ConnectionStatsMiddleware(object):
                 elif state_int == SYN_RECV_STATE:
                     waiting_connections += 1
 
-        metrics.gauge('connections', established_connections, { 'state': 'active' })
-        metrics.gauge('connections', waiting_connections, { 'state': 'queued' })
+        metrics.gauge('connections', established_connections, {'state': 'active'})
+        metrics.gauge('connections', waiting_connections, {'state': 'queued'})

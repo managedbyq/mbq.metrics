@@ -1,3 +1,4 @@
+# flake8: noqa
 from unittest import TestCase
 
 from .compat import mock, mock_open_patch
@@ -21,6 +22,6 @@ class ConnectionStatsMiddlewareTest(TestCase):
         mock_file_patch.start()
 
         sut.report_metrics()
-        mock_gauge.assert_has_calls([mock.call('connections', 2, { 'state': 'active' }),
-                                     mock.call('connections', 1, { 'state': 'queued' })])
+        mock_gauge.assert_has_calls([mock.call('connections', 2, {'state': 'active'}),
+                                     mock.call('connections', 1, {'state': 'queued'})])
         mock_file_patch.stop()
