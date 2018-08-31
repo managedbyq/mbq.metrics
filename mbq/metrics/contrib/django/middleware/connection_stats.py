@@ -55,10 +55,10 @@ class ConnectionStatsMiddleware(object):
             local_low, local_high = self.local_port_range
             all_connections = [conn.strip().split(' ')
                                for conn in f.read().splitlines()[1:]]
-            local_connections = [conn for conn in all_connections
-                                 if not local_low <= int(conn[1].split(':')[1], 16) <= local_high]
+            inbound_connections = [conn for conn in all_connections
+                                   if not local_low <= int(conn[1].split(':')[1], 16) <= local_high]
 
-        states = Counter(int(conn[3], 16) for conn in local_connections)
+        states = Counter(int(conn[3], 16) for conn in inbound_connections)
 
         metrics.gauge('connections', states[ESTABLISHED_STATE], {'state': 'active'})
         metrics.gauge('connections', states[SYN_RECV_STATE], {'state': 'queued'})
