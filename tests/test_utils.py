@@ -22,10 +22,3 @@ class TagDictToListTest(TestCase):
             'test2': 'dogs',
         })
         self.assertEqual(set(tags), {'test1', 'test2:dogs'})
-
-
-class NullStatsdTest(TestCase):
-    def test_always_unimplemented(self):
-        statsd = utils.NullStatsd()
-        with self.assertRaises(utils.MetricsError):
-            statsd.any_attribute
