@@ -1,8 +1,9 @@
+import logging
 from collections import Counter
 from datetime import datetime, timedelta
-import logging
 
 from mbq import metrics
+
 
 # https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/net/tcp_states.h?id=HEAD
 ESTABLISHED_STATE = 1
