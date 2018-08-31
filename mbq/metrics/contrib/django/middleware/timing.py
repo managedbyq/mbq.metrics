@@ -1,13 +1,16 @@
 from time import time
 
 from django.conf import settings
+
+from mbq import metrics
+from mbq.metrics.contrib import utils
+
+
 try:
     from django.utils.deprecation import MiddlewareMixin as MiddlewareDeprecationMixin
 except ImportError:
     MiddlewareDeprecationMixin = object
 
-from mbq import metrics
-from mbq.metrics.contrib import utils
 
 SETTINGS = {
     'EXCLUDED_PATHS': set()

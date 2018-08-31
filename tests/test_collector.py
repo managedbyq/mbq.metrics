@@ -1,7 +1,6 @@
 from unittest import TestCase
 
 from mbq import metrics
-
 from tests.compat import mock
 
 
