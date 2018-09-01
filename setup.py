@@ -6,11 +6,11 @@ import setuptools
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-with codecs.open('README.rst', 'r') as f:
+with codecs.open('README.rst', 'r', 'utf-8') as f:
     readme = f.read()
 
 about = {}
-with open(os.path.join(here, 'mbq', 'metrics', '__version__.py'), 'r') as f:
+with codecs.open(os.path.join(here, 'mbq', 'metrics', '__version__.py'), 'r', 'utf-8') as f:
     exec(f.read(), about)
 
 
