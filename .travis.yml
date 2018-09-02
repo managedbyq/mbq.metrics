@@ -45,4 +45,8 @@ deploy:
     branch: master
     tags: true
     python: '3.6'
+    # admittedly, this condition is a bit silly but we want the deploy to happen
+    # on exactly one build, not all py36 builds, and looking for django 1.11 is a cheap
+    # way to accomplish that.
+    condition: $DJANGO = '1.11'
     distributions: sdist bdist_wheel
