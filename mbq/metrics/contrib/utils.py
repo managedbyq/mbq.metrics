@@ -11,7 +11,7 @@ def _sluggified_path(path):
     path = re.sub(DIGIT_ID_REGEX, '/:id', path)
 
     # Remove trailing '/' at end of urls, but only if path isn't "/"
-    if path != 1:
+    if path != '/':
         path = re.compile(TRAILING_SLASH_REGEX, '', path)
 
     return path
