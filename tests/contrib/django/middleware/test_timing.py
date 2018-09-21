@@ -17,6 +17,10 @@ class TimingMiddlewareTest(TestCase):
         from mbq.metrics.contrib.utils import _sluggified_path
         self.assertEqual(_sluggified_path('/i/am/239847298374/path/'), '/i/am/:id/path')
 
+    def test_sluggified_path_doesnt_remove_only_slash(self):
+        from mbq.metrics.contrib.utils import _sluggified_path
+        self.assertEqual(_sluggified_path('/'), '/')
+
     def test_sluggified_path_uuid_and_int_transforms(self):
         from mbq.metrics.contrib.utils import _sluggified_path
         self.assertEqual(
