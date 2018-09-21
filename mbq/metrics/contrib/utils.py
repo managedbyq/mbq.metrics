@@ -11,7 +11,7 @@ def _sluggified_path(path):
 
     # Remove trailing '/' at end of urls, but only if path isn't "/"
     if path != '/' and path[-1] == '/':
-        path = path[0: -1]
+        path = path[:-1]
 
     return path
 
