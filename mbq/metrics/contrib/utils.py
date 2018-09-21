@@ -3,7 +3,6 @@ import re
 
 DIGIT_ID_REGEX = re.compile(r'/[0-9]+')
 UUID_REGEX = re.compile(r'/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
-TRAILING_SLASH_REGEX = re.compile(r'/\/$/')
 
 
 def _sluggified_path(path):
@@ -11,8 +10,8 @@ def _sluggified_path(path):
     path = re.sub(DIGIT_ID_REGEX, '/:id', path)
 
     # Remove trailing '/' at end of urls, but only if path isn't "/"
-    if path != '/':
-        path = re.compile(TRAILING_SLASH_REGEX, '', path)
+    if path != '/' and path[-1] == '/':
+        path = path[0: -1]
 
     return path
 
