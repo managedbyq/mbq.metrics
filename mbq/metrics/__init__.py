@@ -1,5 +1,6 @@
 import functools
 import logging
+from copy import copy
 
 import datadog
 
@@ -74,7 +75,7 @@ class Collector(object):
         return namespace
 
     def make_tags(self):
-        tags = _constant_tags.copy()
+        tags = copy(_constant_tags)
         tags.extend(self._tags)
         return tags
 
