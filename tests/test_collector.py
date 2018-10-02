@@ -38,25 +38,39 @@ class CollectorTests(TestCase):
                 'default_namespace.test1.test2',
             )
 
-    @mock.patch('mbq.metrics._constant_tags', {'a': 1, 'b': 1})
+    @mock.patch('mbq.metrics._constant_tags', ['a:1', 'b:1'])
     def test_combine_tags(self, _statsd):
-        # uses constant tags only
+        # start with constant tags
         self.assertEqual(
             metrics.Collector()._combine_tags(None),
             ['a:1', 'b:1'],
         )
 
-        # collector tags override constant_tags
+        # layer on collector tags
         collector = metrics.Collector(tags={'a': '2', 'c': 1})
         self.assertEqual(
             collector._combine_tags(None),
-            ['a:2', 'b:1', 'c:1'],
+            ['a:1', 'b:1', 'a:2', 'c:1'],
         )
 
-        # event tags override collector tags
+        # layer on event tags
         self.assertEqual(
             collector._combine_tags({'a': '3', 'd': 1}),
-            ['a:3', 'b:1', 'c:1', 'd:1'],
+            ['a:1', 'b:1', 'a:2', 'c:1', 'a:3', 'd:1'],
+        )
+
+    def test_using_dictionaries_for_tags(self, _statsd):
+        collector = metrics.Collector(tags={'a': 1})
+        self.assertEqual(
+            collector._combine_tags({'b': 2}),
+            ['a:1', 'b:2']
+        )
+
+    def test_using_tuples_for_tags(self, _statsd):
+        collector = metrics.Collector(tags={'a': 1})
+        self.assertEqual(
+            collector._combine_tags(('b:2',)),
+            ['a:1', 'b:2']
         )
 
     @mock.patch('mbq.metrics._namespace', 'constant_namespace')
@@ -71,7 +85,7 @@ class CollectorTests(TestCase):
         _statsd.service_check.assert_called_with(
             'namespace.prefix.service_name',
             1,
-            tags=['constant:1', 't:2'],
+            tags=['constant:1', 't:1', 't:2'],
             message=None,
         )
 
@@ -88,5 +102,5 @@ class CollectorTests(TestCase):
             'hi!',
             alert_type=None,
             source_type_name='my apps',
-            tags=['tag:event_tag']
+            tags=['tag:collector_tag', 'tag:event_tag']
         )

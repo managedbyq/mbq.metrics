@@ -21,7 +21,7 @@ UNKNOWN = datadog.DogStatsd.UNKNOWN
 
 logger = logging.getLogger('mbq.metrics')
 
-_constant_tags = {}
+_constant_tags = []
 _initialized = False
 _namespace = None
 _statsd = datadog.DogStatsd(
@@ -35,7 +35,7 @@ def init(namespace=None, constant_tags=None):
         logger.warning('mbq.metrics already initialized. Ignoring re-init.')
         return
 
-    _constant_tags = constant_tags or {}
+    _constant_tags = utils.tags_as_list(constant_tags)
     _namespace = namespace
     _initialized = True
 
@@ -43,7 +43,7 @@ def init(namespace=None, constant_tags=None):
 class Collector(object):
     def __init__(self, prefix=None, tags=None, namespace=None):
         self.prefix = prefix
-        self._tags = tags or {}
+        self._tags = utils.tags_as_list(tags)
         self._namespace = namespace
 
     def __call__(self, func):
@@ -73,10 +73,9 @@ class Collector(object):
             )
         return namespace
 
-    @property
-    def tags(self):
+    def make_tags(self):
         tags = _constant_tags.copy()
-        tags.update(self._tags)
+        tags.extend(self._tags)
         return tags
 
     def _combine_metric(self, metric):
@@ -93,10 +92,9 @@ class Collector(object):
         return '.'.join(combined_names)
 
     def _combine_tags(self, tags):
-        combined_tags = self.tags
-        if tags:
-            combined_tags.update(tags)
-        return utils.tag_dict_to_list(combined_tags)
+        combined_tags = self.make_tags()
+        combined_tags.extend(utils.tags_as_list(tags))
+        return combined_tags
 
     def event(self, title, text, alert_type=None, tags=None):
         _statsd.event(
