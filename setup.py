@@ -38,7 +38,7 @@ setuptools.setup(
     keywords='metrics monitoring statsd',
     packages=setuptools.find_packages(),
     install_requires=[
-        'datadog==0.22.0',  # pinned until 1.0.0
+        'datadog==0.24.0',  # pinned until 1.0.0
     ],
     zip_safe=True,
 )
