@@ -1,4 +1,4 @@
-__author__ = 'Managed by Q, Inc.',
+__author__ = 'Managed by Q, Inc.'
 __author_email__ = 'open-source@managedbyq.com'
 __description__ = 'MBQ Metrics'
 __license__ = 'Apache 2.0'
