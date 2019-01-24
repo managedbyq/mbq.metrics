@@ -12,7 +12,6 @@ services:
     environment:
       TOX_WORK_DIR: /tox
       PYTHON_VERSION: py36
-    command: [./test.sh]
 
   py37:
     build:
@@ -24,16 +23,3 @@ services:
     environment:
       TOX_WORK_DIR: /tox
       PYTHON_VERSION: py37
-    command: [./test.sh]
-
-  pypy3:
-    build:
-      context: .
-      args:
-        IMAGE: 'pypy:3-6.0-slim-jessie'
-    volumes:
-      - .:/app
-    environment:
-      TOX_WORK_DIR: /tox
-      PYTHON_VERSION: pypy3
-    command: [./test.sh]
