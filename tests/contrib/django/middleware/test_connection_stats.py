@@ -15,7 +15,7 @@ TEST_PROC_NET_TCP = '''  sl  local_address rem_address   st tx_queue rx_queue tr
 
 
 class ConnectionStatsMiddlewareTest(TestCase):
-    @mock.patch('mbq.metrics.gauge')
+    @mock.patch('mbq.metrics.contrib.utils.collector.gauge')
     def test_middleware(self, mock_gauge):
         from mbq.metrics.contrib.django.middleware.connection_stats import ConnectionStatsMiddleware
         sut = ConnectionStatsMiddleware(mock.Mock())

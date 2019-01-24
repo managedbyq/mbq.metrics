@@ -2,18 +2,6 @@
 version: '3'
 
 services:
-  py27:
-    build:
-      context: .
-      args:
-        IMAGE: 'python:2.7-slim-stretch'
-    volumes:
-      - .:/app
-    environment:
-      TOX_WORK_DIR: /tox
-      PYTHON_VERSION: py27
-    command: [./test.sh]
-
   py36:
     build:
       context: .

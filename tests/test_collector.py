@@ -26,7 +26,7 @@ class CollectorTests(TestCase):
             'namespace.test2',
         )
 
-        with mock.patch('mbq.metrics._namespace', 'default_namespace'):
+        with mock.patch('mbq.metrics._service', 'default_namespace'):
             collector = metrics.Collector(namespace='namespace', prefix='test1')
             self.assertEqual(
                 collector._combine_metric('test2'),
@@ -73,7 +73,7 @@ class CollectorTests(TestCase):
             ['a:1', 'b:2']
         )
 
-    @mock.patch('mbq.metrics._namespace', 'constant_namespace')
+    @mock.patch('mbq.metrics._service', 'constant_namespace')
     def test_service_check_name_and_tags(self, _statsd):
         collector = metrics.Collector(
             prefix='prefix',

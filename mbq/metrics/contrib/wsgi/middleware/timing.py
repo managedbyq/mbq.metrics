@@ -1,6 +1,5 @@
 from time import time
 
-from mbq import metrics
 from mbq.metrics.contrib.utils import collector, get_response_metrics_tags
 
 

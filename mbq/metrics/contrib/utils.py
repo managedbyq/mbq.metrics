@@ -1,6 +1,6 @@
 import re
 
-from mbq.metrics import _service, _env
+from mbq.metrics import Collector, _env, _service
 
 
 DIGIT_ID_REGEX = re.compile(r'/[0-9]+')
@@ -27,7 +27,7 @@ def get_response_metrics_tags(status_code, path, method):
     }
 
 
-collector = metrics.Collector(
+collector = Collector(
     namespace="mbq.metrics",
     tags={"env": _env, "service_name": _service},
 )
