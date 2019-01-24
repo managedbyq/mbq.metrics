@@ -1,4 +1,4 @@
-def tags_as_list(tags):
+def tags_as_list(tags) -> list:
     if tags is None:
         return []
     if isinstance(tags, (list, tuple)):

@@ -1,9 +1,15 @@
 from unittest import TestCase
 
+from mbq import env, metrics
+
 from compat import mock
 
 
 class TimingMiddlewareTest(TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        metrics.init('service', env.Environment.LOCAL)
 
     def test_sluggified_path_no_transforms(self):
         from mbq.metrics.contrib.utils import _sluggified_path

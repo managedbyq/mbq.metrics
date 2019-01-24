@@ -11,7 +11,7 @@ except ImportError:
     MiddlewareDeprecationMixin = object
 
 
-SETTINGS = {
+SETTINGS: dict = {
     'EXCLUDED_PATHS': set()
 }
 SETTINGS.update(

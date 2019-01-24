@@ -1,16 +1,20 @@
 from unittest import TestCase
 
-from mbq import metrics
+from mbq import env, metrics
 from tests.compat import mock
 
 
 @mock.patch('mbq.metrics._statsd')
 class CollectorTests(TestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        metrics.init('service', env.Environment.LOCAL)
+
     def test_combine_metric(self, _statsd):
         collector = metrics.Collector(prefix='test1')
         with self.assertRaises(ValueError):
-            collector._combine_metric('test2'),
+            collector._combine_metric(None),
 
         collector = metrics.Collector(namespace='namespace', prefix='test1')
         self.assertEqual(

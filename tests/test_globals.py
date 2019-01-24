@@ -1,6 +1,6 @@
 import unittest
 
-from mbq import metrics
+from mbq import env, metrics
 from tests.compat import mock
 
 
@@ -11,7 +11,7 @@ class GlobalTests(unittest.TestCase):
 
     @mock.patch('mbq.metrics._initialized', False)
     def test_init(self):
-        metrics.init('service', 'env')
+        metrics.init('service', env.Environment.LOCAL)
         self.assertTrue(metrics._initialized)
 
     def test_global_functions_exist(self):

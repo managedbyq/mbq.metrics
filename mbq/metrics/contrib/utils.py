@@ -29,5 +29,5 @@ def get_response_metrics_tags(status_code, path, method):
 
 collector = Collector(
     namespace="mbq.metrics",
-    tags={"env": _env, "service_name": _service},
+    tags={"env": _env.long_name, "service_name": _service},
 )

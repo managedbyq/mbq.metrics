@@ -4,6 +4,8 @@ from copy import copy
 
 import datadog
 
+import mbq.env
+
 from .__version__ import (  # noqa
     __author__,
     __author_email__,
@@ -22,16 +24,16 @@ UNKNOWN = datadog.DogStatsd.UNKNOWN
 
 logger = logging.getLogger('mbq.metrics')
 
-_constant_tags = []
-_initialized = False
-_service = None
-_env = None
+_constant_tags: list
+_initialized: bool = False
+_service: str
+_env: mbq.env.Environment
 _statsd = datadog.DogStatsd(
     use_default_route=True,  # assumption: code is running in a container
 )
 
 
-def init(service: str, env: str, constant_tags=None):
+def init(service: str, env: mbq.env.Environment, constant_tags=None):
     global _constant_tags, _initialized, _service, _env
     if _initialized:
         logger.warning('mbq.metrics already initialized. Ignoring re-init.')
