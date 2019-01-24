@@ -31,7 +31,7 @@ _statsd = datadog.DogStatsd(
 )
 
 
-def init(service, env, constant_tags=None):
+def init(service: str, env: str, constant_tags=None):
     global _constant_tags, _initialized, _service, _env
     if _initialized:
         logger.warning('mbq.metrics already initialized. Ignoring re-init.')
