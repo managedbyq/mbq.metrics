@@ -2,8 +2,7 @@ from time import time
 
 from django.conf import settings
 
-from mbq import metrics
-from mbq.metrics.contrib import utils
+from mbq.metrics.contrib.utils import collector, get_response_metrics_tags
 
 
 try:
@@ -33,17 +32,17 @@ class TimingMiddleware(MiddlewareDeprecationMixin):
 
     def process_response(self, request, response):
 
-        tags = utils.get_response_metrics_tags(
+        tags = get_response_metrics_tags(
             response.status_code,
             request.path,
             request.method,
         )
 
-        metrics.increment('response', tags=tags)
+        collector.increment('response', tags=tags)
 
         if hasattr(request, '_mbq_metrics_start_time'):
             duration = time() - request._mbq_metrics_start_time
             duration_ms = int(round(duration * 1000))
-            metrics.timing('request_duration_ms', duration_ms, tags=tags)
+            collector.timing('request_duration_ms', duration_ms, tags=tags)
 
         return response

@@ -1,7 +1,7 @@
 from time import time
 
 from mbq import metrics
-from mbq.metrics.contrib import utils
+from mbq.metrics.contrib.utils import collector, get_response_metrics_tags
 
 
 class TimingMiddleware(object):
@@ -18,16 +18,16 @@ class TimingMiddleware(object):
 
         response = self.app(environ, _start_response)
 
-        tags = utils.get_response_metrics_tags(
+        tags = get_response_metrics_tags(
             self.status_code,
             environ.get('PATH_INFO', ''),
             environ.get('REQUEST_METHOD'),
         )
 
-        metrics.increment('response', tags=tags)
+        collector.increment('response', tags=tags)
 
         duration = time() - start_time
         duration_ms = int(round(duration * 1000))
-        metrics.timing('request_duration_ms', duration_ms, tags=tags)
+        collector.timing('request_duration_ms', duration_ms, tags=tags)
 
         return response

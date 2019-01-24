@@ -2,7 +2,7 @@ import logging
 from collections import Counter
 from datetime import datetime, timedelta
 
-from mbq import metrics
+from mbq.metrics.contrib.utils import collector
 
 
 # https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/net/tcp_states.h?id=HEAD
@@ -61,5 +61,5 @@ class ConnectionStatsMiddleware(object):
 
         states = Counter(int(conn[3], 16) for conn in inbound_connections)
 
-        metrics.gauge('connections', states[ESTABLISHED_STATE], {'state': 'active'})
-        metrics.gauge('connections', states[SYN_RECV_STATE], {'state': 'queued'})
+        collector.gauge('connections', states[ESTABLISHED_STATE], {'state': 'active'})
+        collector.gauge('connections', states[SYN_RECV_STATE], {'state': 'queued'})
