@@ -1,6 +1,8 @@
 # flake8: noqa
 from unittest import TestCase
 
+from mbq import env, metrics
+
 from .compat import mock, mock_open_patch
 
 TEST_PROC_SYS_NET_IPV4_IP_LOCAL_PORT_RANGE = '30000	60000'
@@ -15,7 +17,11 @@ TEST_PROC_NET_TCP = '''  sl  local_address rem_address   st tx_queue rx_queue tr
 
 
 class ConnectionStatsMiddlewareTest(TestCase):
-    @mock.patch('mbq.metrics.gauge')
+    @classmethod
+    def setUpClass(cls):
+        metrics.init('service', env.Environment.LOCAL)
+
+    @mock.patch('mbq.metrics.contrib.utils.collector.gauge')
     def test_middleware(self, mock_gauge):
         from mbq.metrics.contrib.django.middleware.connection_stats import ConnectionStatsMiddleware
         sut = ConnectionStatsMiddleware(mock.Mock())

@@ -1,9 +1,15 @@
 from unittest import TestCase
 
+from mbq import env, metrics
+
 from compat import mock
 
 
 class TimingMiddlewareTest(TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        metrics.init('service', env.Environment.LOCAL)
 
     def test_sluggified_path_no_transforms(self):
         from mbq.metrics.contrib.utils import _sluggified_path
@@ -27,10 +33,11 @@ class TimingMiddlewareTest(TestCase):
             _sluggified_path('/i/am/88aa6219-9661-48fa-973a-6c60bbed1134/path/2394723948'),
             '/i/am/:id/path/:id')
 
-    @mock.patch('mbq.metrics')
+    @mock.patch('mbq.metrics.contrib.utils.collector.timing')
+    @mock.patch('mbq.metrics.contrib.utils.collector.increment')
     @mock.patch('django.conf.settings')
     @mock.patch('time.time')
-    def test_django_middleware(self, time, settings, metrics):
+    def test_django_middleware(self, time, settings, increment, timing):
         from mbq.metrics.contrib.django.middleware.timing import TimingMiddleware
 
         time.side_effect = [1, 2]
@@ -53,12 +60,13 @@ class TimingMiddlewareTest(TestCase):
             'status_code': 200,
             'status_range': '2xx',
         }
-        metrics.increment.assert_called_once_with('response', tags=tags)
-        metrics.timing.assert_called_once_with('request_duration_ms', 1000, tags=tags)
+        increment.assert_called_once_with('response', tags=tags)
+        timing.assert_called_once_with('request_duration_ms', 1000, tags=tags)
 
-    @mock.patch('mbq.metrics')
+    @mock.patch('mbq.metrics.contrib.utils.collector.timing')
+    @mock.patch('mbq.metrics.contrib.utils.collector.increment')
     @mock.patch('time.time')
-    def test_wsgi_middleware_for_post_1_10(self, time, metrics):
+    def test_wsgi_middleware_for_post_1_10(self, time, increment, timing):
         from mbq.metrics.contrib.wsgi.middleware.timing import TimingMiddleware
 
         time.side_effect = [1, 2]
@@ -85,5 +93,5 @@ class TimingMiddlewareTest(TestCase):
             'status_code': 400,
             'status_range': '4xx',
         }
-        metrics.increment.assert_called_once_with('response', tags=tags)
-        metrics.timing.assert_called_once_with('request_duration_ms', 1000, tags=tags)
+        increment.assert_called_once_with('response', tags=tags)
+        timing.assert_called_once_with('request_duration_ms', 1000, tags=tags)

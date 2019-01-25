@@ -11,14 +11,10 @@ env:
   - DJANGO=1.11
   - DJANGO=2.0
   - DJANGO=2.1
-  - DJANGO=master
 
 matrix:
   include:
-    - { python: '3.6', env: TOXENV=lint }
-
-  allow_failures:
-    - env: DJANGO=master
+    - { python: '3.7', env: TOXENV=lint }
 
 install:
   - travis_retry pip install --upgrade pip tox tox-venv tox-travis
@@ -38,7 +34,7 @@ deploy:
     repo: managedbyq/mbq.metrics
     branch: master
     tags: true
-    python: '3.6'
+    python: '3.7'
     # admittedly, this condition is a bit silly but we want the deploy to happen
     # on exactly one build, not all py36 builds, and looking for django 1.11 is a cheap
     # way to accomplish that.
