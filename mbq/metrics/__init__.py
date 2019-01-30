@@ -138,6 +138,14 @@ class Collector(object):
             tags=self._combine_tags(tags),
         )
 
+    def histogram(self, metric, value, tags=None, sample_rate=1):
+        _statsd.histogram(
+            self._combine_metric(metric),
+            value,
+            tags=self._combine_tags(tags),
+            sample_rate=sample_rate
+        )
+
     def service_check(self, check_name, status, tags=None, message=None):
         # the dogstatsd client doesn't use namespace or constant_tags
         # for service_check but we want to be consistent
