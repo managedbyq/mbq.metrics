@@ -26,16 +26,15 @@ Guaranteed fresh.
 
 Getting started
 ---------------
+Initialize mbq.metrics in your ``settings.py`` like this:
 
 .. code-block:: python
 
-    from mbq import metrics
-
-    metrics.init(namespace='my-service', constant_tags={'env': ENV_NAME})
-
-    metrics.increment('metric.name', 5, tags={'something': 'awesome'})
-
-    # show the rest
+    from mbq import env, metrics
+    
+    ENV = env.get_environment("ENV_NAME")
+    SERVICE_NAME = 'service-name'
+    metrics.init(SERVICE_NAME, ENV, constant_tags={'env': ENV_NAME})
 
 HTTP Metrics with Django Middleware
 -----------------------------------
@@ -47,13 +46,7 @@ This library also contains a piece of Django middleware you can use to create an
 * Response content length
 * Request path
 
-Adding the middleware to your Django project and configuring the Datadog dashboard is quick and easy:
-
-1. Install ``mbq.metrics >= 0.2.1`` in your service (If you are already using the mbq.metrics middleware, upgrading to 0.2.1 will change the metric names being sent to datadog)
-2. Include ``mbq.metrics.contrib.django.middleware.timing.TimingMiddleware`` in the ``MIDDLEWARE`` constant in your ``settings.py`` file.
-3. Go to the `Invoicing HTTP Datadog dashboard <https://app.datadoghq.com/dash/893352>`_. Click the gear in the top right and then “Clone Dashboard”.
-4. Name the new dashboard ``Yourservicename: HTTP``
-5. For each graph in your new dashboard, click edit, and change the metric from ``invoicing.response`` to ``Yourservicename.response``
+Adding the middleware to your Django project and configuring the Datadog dashboard is quick and easy: just include ``mbq.metrics.contrib.django.middleware.timing.TimingMiddleware`` in the ``MIDDLEWARE`` constant in your ``settings.py`` file.
 
 Tada!
 
