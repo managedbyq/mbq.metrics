@@ -1,4 +1,4 @@
-from time import time
+from time import monotonic
 
 from django.conf import settings
 
@@ -28,7 +28,7 @@ class TimingMiddleware(MiddlewareDeprecationMixin):
     def process_request(self, request):
         if request.path.strip('/') in SETTINGS['EXCLUDED_PATHS']:
             return request
-        setattr(request, '_mbq_metrics_start_time', time())
+        setattr(request, '_mbq_metrics_start_time', monotonic())
 
     def process_response(self, request, response):
 
@@ -41,7 +41,7 @@ class TimingMiddleware(MiddlewareDeprecationMixin):
         collector.increment('response', tags=tags)
 
         if hasattr(request, '_mbq_metrics_start_time'):
-            duration = time() - request._mbq_metrics_start_time
+            duration = monotonic() - request._mbq_metrics_start_time
             duration_ms = int(round(duration * 1000))
             collector.timing('request_duration_ms', duration_ms, tags=tags)
 
