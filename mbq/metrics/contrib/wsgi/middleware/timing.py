@@ -1,4 +1,4 @@
-from time import monotonic
+import time
 
 from mbq.metrics.contrib.utils import collector, get_response_metrics_tags
 
@@ -9,7 +9,7 @@ class TimingMiddleware(object):
         self.status_code = None
 
     def __call__(self, environ, start_response):
-        start_time = monotonic()
+        start_time = time.monotonic()
 
         def _start_response(status, headers, *args):
             self.status_code = int(status.split()[0])
@@ -25,7 +25,7 @@ class TimingMiddleware(object):
 
         collector.increment('response', tags=tags)
 
-        duration = monotonic() - start_time
+        duration = time.monotonic() - start_time
         duration_ms = int(round(duration * 1000))
         collector.timing('request_duration_ms', duration_ms, tags=tags)
 
