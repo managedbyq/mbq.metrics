@@ -36,11 +36,11 @@ class TimingMiddlewareTest(TestCase):
     @mock.patch('mbq.metrics.contrib.utils.collector.timing')
     @mock.patch('mbq.metrics.contrib.utils.collector.increment')
     @mock.patch('django.conf.settings')
-    @mock.patch('time.time')
-    def test_django_middleware(self, time, settings, increment, timing):
+    @mock.patch('time.monotonic')
+    def test_django_middleware(self, monotonic, settings, increment, timing):
         from mbq.metrics.contrib.django.middleware.timing import TimingMiddleware
 
-        time.side_effect = [1, 2]
+        monotonic.side_effect = [1, 2]
 
         get_response_mock = mock.Mock(
             name='response_callable',
@@ -65,11 +65,11 @@ class TimingMiddlewareTest(TestCase):
 
     @mock.patch('mbq.metrics.contrib.utils.collector.timing')
     @mock.patch('mbq.metrics.contrib.utils.collector.increment')
-    @mock.patch('time.time')
-    def test_wsgi_middleware_for_post_1_10(self, time, increment, timing):
+    @mock.patch('time.monotonic')
+    def test_wsgi_middleware_for_post_1_10(self, monotonic, increment, timing):
         from mbq.metrics.contrib.wsgi.middleware.timing import TimingMiddleware
 
-        time.side_effect = [1, 2]
+        monotonic.side_effect = [1, 2]
         response_mock = mock.Mock()
 
         mock_environ = {
