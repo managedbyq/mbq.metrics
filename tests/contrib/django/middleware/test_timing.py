@@ -1,8 +1,7 @@
 from unittest import TestCase
 
-from mbq import env, metrics
-
 from compat import mock
+from mbq import env, metrics
 
 
 class TimingMiddlewareTest(TestCase):

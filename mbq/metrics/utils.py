@@ -1,4 +1,9 @@
-def tags_as_list(tags) -> list:
+from typing import List, Optional
+
+from .types import Tags
+
+
+def tags_as_list(tags: Optional[Tags]) -> List[str]:
     if tags is None:
         return []
     if isinstance(tags, (list, tuple)):
