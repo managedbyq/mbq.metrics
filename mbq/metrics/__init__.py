@@ -1,7 +1,7 @@
 import functools
 import logging
 from copy import copy
-from typing import List
+from typing import List, Optional
 
 import datadog
 
@@ -36,7 +36,7 @@ _statsd = datadog.DogStatsd(
 )
 
 
-def init(service: str, env: mbq.env.Environment, constant_tags: Tags = []):
+def init(service: str, env: mbq.env.Environment, constant_tags: Optional[Tags] = None):
     global _constant_tags, _initialized, _service, _env
     if _initialized:
         logger.warning('mbq.metrics already initialized. Ignoring re-init.')
@@ -49,7 +49,7 @@ def init(service: str, env: mbq.env.Environment, constant_tags: Tags = []):
 
 
 class Collector(object):
-    def __init__(self, prefix=None, tags: Tags = [], namespace: str = None):
+    def __init__(self, prefix=None, tags: Optional[Tags] = None, namespace: str = None):
         self.prefix = prefix
         self._tags = utils.tags_as_list(tags)
         self._namespace = namespace
@@ -99,12 +99,12 @@ class Collector(object):
 
         return '.'.join(combined_names)
 
-    def _combine_tags(self, tags: Tags) -> List[str]:
+    def _combine_tags(self, tags: Optional[Tags]) -> List[str]:
         combined_tags = self.make_tags()
         combined_tags.extend(utils.tags_as_list(tags))
         return combined_tags
 
-    def event(self, title: str, text: str, alert_type: str = None, tags: Tags = []):
+    def event(self, title: str, text: str, alert_type: str = None, tags: Optional[Tags] = None):
         _statsd.event(
             self._combine_metric(title),
             text,
@@ -113,35 +113,35 @@ class Collector(object):
             source_type_name='my apps',
         )
 
-    def gauge(self, metric: str, value: int, tags: Tags = []):
+    def gauge(self, metric: str, value: int, tags: Optional[Tags] = None):
         _statsd.gauge(
             self._combine_metric(metric),
             value,
             tags=self._combine_tags(tags),
         )
 
-    def increment(self, metric: str, value=1, tags: Tags = []):
+    def increment(self, metric: str, value=1, tags: Optional[Tags] = None):
         _statsd.increment(
             self._combine_metric(metric),
             value=value,
             tags=self._combine_tags(tags),
         )
 
-    def timed(self, metric: str, tags: Tags = [], use_ms: bool = False):
+    def timed(self, metric: str, tags: Optional[Tags] = None, use_ms: bool = False):
         return _statsd.timed(
             self._combine_metric(metric),
             tags=self._combine_tags(tags),
             use_ms=use_ms,
         )
 
-    def timing(self, metric: str, value: int, tags: Tags = []):
+    def timing(self, metric: str, value: int, tags: Optional[Tags] = None):
         _statsd.timing(
             self._combine_metric(metric),
             value,
             tags=self._combine_tags(tags),
         )
 
-    def histogram(self, metric: str, value: int, tags: Tags = [], sample_rate=1):
+    def histogram(self, metric: str, value: int, tags: Optional[Tags] = None, sample_rate=1):
         _statsd.histogram(
             self._combine_metric(metric),
             value,
@@ -150,7 +150,7 @@ class Collector(object):
         )
 
     def service_check(
-        self, check_name: str, status: int, tags: Tags = [], message: str = None
+        self, check_name: str, status: int, tags: Optional[Tags] = None, message: str = None
     ):
         # the dogstatsd client doesn't use namespace or constant_tags
         # for service_check but we want to be consistent
