@@ -1,11 +1,13 @@
 import functools
 import logging
+import sys
 from copy import copy
 
 import datadog
 
 import mbq.env
 
+from . import utils
 from .__version__ import (  # noqa
     __author__,
     __author_email__,
@@ -15,7 +17,7 @@ from .__version__ import (  # noqa
     __url__,
     __version__,
 )
-from . import utils
+
 
 OK = datadog.DogStatsd.OK
 WARNING = datadog.DogStatsd.WARNING
@@ -29,7 +31,7 @@ _initialized: bool = False
 _service: str
 _env: mbq.env.Environment
 _statsd = datadog.DogStatsd(
-    use_default_route=True,  # assumption: code is running in a container
+    use_default_route=(sys.platform == "linux"),
 )
 
 
