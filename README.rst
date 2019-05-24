@@ -31,7 +31,7 @@ Initialize mbq.metrics in your ``settings.py`` like this:
 .. code-block:: python
 
     from mbq import env, metrics
-    
+
     ENV = env.get_environment("ENV_NAME")
     SERVICE_NAME = 'service-name'
     metrics.init(SERVICE_NAME, ENV, constant_tags={'env': ENV_NAME})
@@ -60,7 +60,7 @@ See `the implementation in Isengard <https://github.com/managedbyq/isengard/pull
 Testing
 -------
 
-Tests are automatically in `Travis CI https://travis-ci.org/managedbyq/mbq.metrics`_ but you can also run tests locally using `docker-compose`.
+Tests are automatically in `Travis CI <https://travis-ci.org/managedbyq/mbq.metrics>`_ but you can also run tests locally using `docker-compose`.
 We now use `tox` for local testing across multiple python environments. Before this use `pyenv` to install the following python interpreters: cpython{2.7, 3.5, 3.6} and pypy3
 
 install and run tox:
