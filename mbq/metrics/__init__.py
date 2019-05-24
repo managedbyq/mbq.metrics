@@ -7,6 +7,7 @@ import datadog
 
 import mbq.env
 
+from . import utils
 from .__version__ import (  # noqa
     __author__,
     __author_email__,
@@ -16,7 +17,7 @@ from .__version__ import (  # noqa
     __url__,
     __version__,
 )
-from . import utils
+
 
 OK = datadog.DogStatsd.OK
 WARNING = datadog.DogStatsd.WARNING
