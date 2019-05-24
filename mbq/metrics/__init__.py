@@ -1,5 +1,6 @@
 import functools
 import logging
+import sys
 from copy import copy
 
 import datadog
@@ -29,7 +30,7 @@ _initialized: bool = False
 _service: str
 _env: mbq.env.Environment
 _statsd = datadog.DogStatsd(
-    use_default_route=True,  # assumption: code is running in a container
+    use_default_route=(sys.platform == "linux"),
 )
 
 
