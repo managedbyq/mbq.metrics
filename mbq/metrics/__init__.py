@@ -126,7 +126,7 @@ class Collector(object):
             tags=self._combine_tags(tags),
         )
 
-    def timed(self, metric, tags=None, use_ms=None):
+    def timed(self, metric, tags=None, use_ms=True):
         return _statsd.timed(
             self._combine_metric(metric),
             tags=self._combine_tags(tags),
