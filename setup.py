@@ -41,5 +41,5 @@ setuptools.setup(
         'datadog==0.24.0',  # pinned until 1.0.0
         'mbq.env>=1,<2',
     ],
-    zip_safe=True,
+    zip_safe=False,
 )
