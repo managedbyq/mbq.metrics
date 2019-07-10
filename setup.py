@@ -36,6 +36,7 @@ setuptools.setup(
         'Topic :: Software Development :: Libraries',
     ],
     keywords='metrics monitoring statsd',
+    package_data={"mbq.metrics": ["py.typed"]},
     packages=setuptools.find_packages(),
     install_requires=[
         'datadog==0.24.0',  # pinned until 1.0.0
