@@ -41,7 +41,14 @@ def init(service: str, env: mbq.env.Environment, constant_tags=None):
         logger.warning('mbq.metrics already initialized. Ignoring re-init.')
         return
 
-    _constant_tags = utils.tags_as_list(constant_tags)
+    # strip out any existing "env:" tags and use the env specified by the `env` arg
+    _constant_tags = [
+        tag
+        for tag in utils.tags_as_list(constant_tags)
+        if not tag.lower().startswith('env:')
+    ]
+    _constant_tags.append('env:{}'.format(env.long_name.lower()))
+
     _service = service
     _env = env
     _initialized = True

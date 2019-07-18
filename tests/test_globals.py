@@ -14,6 +14,14 @@ class GlobalTests(unittest.TestCase):
         metrics.init('service', env.Environment.LOCAL)
         self.assertTrue(metrics._initialized)
 
+    @mock.patch('mbq.metrics._initialized', False)
+    def test_constant_tags(self):
+        metrics.init('service', env.Environment.LOCAL, constant_tags={
+            'env': 'BAD',
+            'another': 'GOOD',
+        })
+        self.assertEqual(set(metrics._constant_tags), {'env:local', 'another:GOOD'})
+
     def test_global_functions_exist(self):
         methods = [
             'event',
