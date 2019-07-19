@@ -34,7 +34,7 @@ Initialize mbq.metrics in your ``settings.py`` like this:
 
     ENV = env.get_environment("ENV_NAME")
     SERVICE_NAME = 'service-name'
-    metrics.init(SERVICE_NAME, ENV, constant_tags={'env': ENV_NAME})
+    metrics.init(SERVICE_NAME, ENV)
 
 HTTP Metrics with Django Middleware
 -----------------------------------

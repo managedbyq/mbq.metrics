@@ -67,14 +67,14 @@ class CollectorTests(TestCase):
         collector = metrics.Collector(tags={'a': 1})
         self.assertEqual(
             collector._combine_tags({'b': 2}),
-            ['a:1', 'b:2']
+            ['env:local', 'a:1', 'b:2'],
         )
 
     def test_using_tuples_for_tags(self, _statsd):
         collector = metrics.Collector(tags={'a': 1})
         self.assertEqual(
             collector._combine_tags(('b:2',)),
-            ['a:1', 'b:2']
+            ['env:local', 'a:1', 'b:2'],
         )
 
     @mock.patch('mbq.metrics._service', 'constant_namespace')
@@ -89,7 +89,7 @@ class CollectorTests(TestCase):
         _statsd.service_check.assert_called_with(
             'namespace.prefix.service_name',
             1,
-            tags=['constant:1', 't:1', 't:2'],
+            tags=['env:local', 'constant:1', 't:1', 't:2'],
             message=None,
         )
 
@@ -106,5 +106,5 @@ class CollectorTests(TestCase):
             'hi!',
             alert_type=None,
             source_type_name='my apps',
-            tags=['tag:collector_tag', 'tag:event_tag']
+            tags=['env:local', 'tag:collector_tag', 'tag:event_tag']
         )
